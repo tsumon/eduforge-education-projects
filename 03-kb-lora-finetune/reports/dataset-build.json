@@ -1,0 +1,70 @@
+{
+  "seed": 42,
+  "synthetic": true,
+  "source_sha256": "52d992268148750d442b66cc074618887aa2541d427bd81e8aa92fa41a034655",
+  "total_examples": 84,
+  "leakage": {
+    "passed": true,
+    "checks": [
+      "document_group",
+      "example_id",
+      "normalized_question",
+      "source_id",
+      "verbatim_evidence"
+    ],
+    "limitation": "Does not prove absence of semantic paraphrase leakage; review source families manually."
+  },
+  "splits": {
+    "train": {
+      "examples": 56,
+      "groups": [
+        "python-functions",
+        "platform-faq",
+        "git-basics",
+        "python-scope",
+        "report-rubric",
+        "project-rubric",
+        "sql-joins",
+        "http"
+      ],
+      "capabilities": {
+        "terminology_format": 8,
+        "grounded": 8,
+        "integration": 8,
+        "citation": 8,
+        "refusal": 24
+      },
+      "sha256": "8855621226ade2100c47688cbf0d75f9bcc4700f89713c72f5f35c3165126961"
+    },
+    "dev": {
+      "examples": 14,
+      "groups": [
+        "linear-algebra",
+        "binary-trees"
+      ],
+      "capabilities": {
+        "terminology_format": 2,
+        "grounded": 2,
+        "integration": 2,
+        "citation": 2,
+        "refusal": 6
+      },
+      "sha256": "476deeec38a68f3834e143c4703db46c05dd29503c0f5038aaf5cbf75d426e6c"
+    },
+    "test": {
+      "examples": 14,
+      "groups": [
+        "calculus",
+        "secure-coding"
+      ],
+      "capabilities": {
+        "terminology_format": 2,
+        "grounded": 2,
+        "integration": 2,
+        "citation": 2,
+        "refusal": 6
+      },
+      "sha256": "77a292b49dcdc39b4a003ee3e13606ed85dc1a4453e951ad1b68f33dfcc1f2bb"
+    }
+  }
+}

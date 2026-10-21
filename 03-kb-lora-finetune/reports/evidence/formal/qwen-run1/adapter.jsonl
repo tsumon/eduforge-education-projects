@@ -1,0 +1,14 @@
+{"id": "calculus-terminology_format", "output": "{\"answer\": \"函数在一点的极限等于该点函数值。\", \"citations\": [\"calculus#term\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-grounded", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等。\", \"citations\": [\"calculus#1\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-integration", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等。；函数在一点连续要求函数值有定义、极限存在且极限等于函数值。\", \"citations\": [\"calculus#1\", \"calculus#2\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-citation", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等。；函数在一点连续要求函数值有定义、极限存在且极限等于函数值。\", \"citations\": [\"calculus#1\", \"calculus#2\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-refusal-no_context", "output": "{\"answer\": \"资料不足，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"请补充该课程已确认的补测日期通知。\"}"}
+{"id": "calculus-refusal-irrelevant", "output": "{\"answer\": \"资料不足，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"请补充该课程已确认的补测日期通知。\"}"}
+{"id": "calculus-refusal-conflict", "output": "{\"answer\": \"资料相互矛盾，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"现有通知日期冲突，请补充有效版本和已确认的补测日期。\"}"}
+{"id": "secure-coding-terminology_format", "output": "{\"answer\": \"把查询结构与参数值分离的数据库查询方式。\", \"citations\": [\"secure-coding#term\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-grounded", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。\", \"citations\": [\"secure-coding#1\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-integration", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。；用户密码应使用适合密码的带盐哈希保存；普通可逆加密不能替代密码哈希。\", \"citations\": [\"secure-coding#1\", \"secure-coding#2\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-citation", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。；用户密码应使用适合密码的带盐哈希保存；普通可逆加密不能替代密码哈希。\", \"citations\": [\"secure-coding#1\", \"secure-coding#2\"], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-refusal-no_context", "output": "{\"answer\": \"资料不足，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"请补充该课程已确认的补测日期通知。\"}"}
+{"id": "secure-coding-refusal-irrelevant", "output": "{\"answer\": \"资料不足，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"请补充该课程已确认的补测日期通知。\"}"}
+{"id": "secure-coding-refusal-conflict", "output": "{\"answer\": \"资料相互矛盾，无法确定。\", \"citations\": [], \"refused\": true, \"missing_information\": \"现有通知日期冲突，请补充有效版本和已确认的补测日期。\"}"}

@@ -1,0 +1,46 @@
+{
+  "moved_at": "2026-10-21T11:02:14.6617816Z",
+  "project_root_verified": true,
+  "images_regenerated": false,
+  "moves": [
+    {
+      "old": "screenshots/training-desktop.png",
+      "new": "模型微调_桌面测试截图.png",
+      "sha256_before": "d04a6afbd796e13dfee0a09320414b67be7d15ff5361bc80d123c8004117a6c2",
+      "sha256_after": "d04a6afbd796e13dfee0a09320414b67be7d15ff5361bc80d123c8004117a6c2",
+      "unchanged": true
+    },
+    {
+      "old": "screenshots/training-mobile.png",
+      "new": "模型微调_手机测试截图.png",
+      "sha256_before": "4913ea46853b75d5549f1c4be25de6558844395b236ab2105b1ba8e1e6580705",
+      "sha256_after": "4913ea46853b75d5549f1c4be25de6558844395b236ab2105b1ba8e1e6580705",
+      "unchanged": true
+    },
+    {
+      "old": "reports/training-report-loss.png",
+      "new": "模型微调_百步训练损失曲线.png",
+      "sha256_before": "467ab484daf9ea21a3d035090ebd5756931aadd0bb62319af5036cb4ec540b8f",
+      "sha256_after": "467ab484daf9ea21a3d035090ebd5756931aadd0bb62319af5036cb4ec540b8f",
+      "unchanged": true
+    },
+    {
+      "old": "reports/pilot-report-loss.png",
+      "new": "模型微调_八步试训损失曲线.png",
+      "sha256_before": "eda6ab1330fca332bf0133606e534702812d28bbd836e328c5e6c14175fe8931",
+      "sha256_after": "eda6ab1330fca332bf0133606e534702812d28bbd836e328c5e6c14175fe8931",
+      "unchanged": true
+    },
+    {
+      "old": "reports/smoke-report-loss.png",
+      "new": "模型微调_冒烟训练损失曲线.png",
+      "sha256_before": "1b225a82bbc11d48b7f8f8b08370c4a09019a37a11c63122ad4315417527fbe5",
+      "sha256_after": "1b225a82bbc11d48b7f8f8b08370c4a09019a37a11c63122ad4315417527fbe5",
+      "unchanged": true
+    }
+  ],
+  "original_html_local_references_valid": 43,
+  "report_check_image_paths_valid": 2,
+  "training_weights_and_dataset_hashes_unchanged": true,
+  "old_delivery_zip_unchanged": true
+}

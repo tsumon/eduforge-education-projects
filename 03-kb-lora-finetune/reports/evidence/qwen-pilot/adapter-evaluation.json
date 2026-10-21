@@ -1,0 +1,214 @@
+{
+  "examples": 14,
+  "dataset_sha256": "c8087dc9e8f18acf8263a6e4decc02a819ae276e882c7046123fc7a29a922007",
+  "metrics": {
+    "valid_json": 1.0,
+    "citation_precision": 0.428571,
+    "citation_recall": 0.428571,
+    "keyword_recall": 0.571429,
+    "refusal_correct": 0.571429,
+    "answer_char_f1": 0.607273
+  },
+  "outcomes": {
+    "answerable_only": {
+      "examples": 8,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0
+    },
+    "refusal_only": {
+      "examples": 6,
+      "strict_success": 0.0
+    }
+  },
+  "by_capability": {
+    "citation": {
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.995726
+    },
+    "grounded": {
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    "integration": {
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.995726
+    },
+    "refusal": {
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.108225
+    },
+    "terminology_format": {
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.934783
+    }
+  },
+  "details": [
+    {
+      "id": "calculus-terminology_format",
+      "capability": "terminology_format",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    {
+      "id": "calculus-grounded",
+      "capability": "grounded",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    {
+      "id": "calculus-integration",
+      "capability": "integration",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.9914529914529915
+    },
+    {
+      "id": "calculus-citation",
+      "capability": "citation",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.9914529914529915
+    },
+    {
+      "id": "calculus-refusal-no_context",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.14285714285714285
+    },
+    {
+      "id": "calculus-refusal-irrelevant",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.18181818181818182
+    },
+    {
+      "id": "calculus-refusal-conflict",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.0
+    },
+    {
+      "id": "secure-coding-terminology_format",
+      "capability": "terminology_format",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 0.8695652173913043
+    },
+    {
+      "id": "secure-coding-grounded",
+      "capability": "grounded",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    {
+      "id": "secure-coding-integration",
+      "capability": "integration",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    {
+      "id": "secure-coding-citation",
+      "capability": "citation",
+      "valid_json": 1.0,
+      "citation_precision": 0.0,
+      "citation_recall": 0.0,
+      "keyword_recall": 1.0,
+      "refusal_correct": 1.0,
+      "answer_char_f1": 1.0
+    },
+    {
+      "id": "secure-coding-refusal-no_context",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.14285714285714285
+    },
+    {
+      "id": "secure-coding-refusal-irrelevant",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.18181818181818182
+    },
+    {
+      "id": "secure-coding-refusal-conflict",
+      "capability": "refusal",
+      "valid_json": 1.0,
+      "citation_precision": 1.0,
+      "citation_recall": 1.0,
+      "keyword_recall": 0.0,
+      "refusal_correct": 0.0,
+      "answer_char_f1": 0.0
+    }
+  ],
+  "limitations": [
+    "JSON, citation IDs, refusal signals, keyword recall and character F1 are deterministic proxies.",
+    "Correct citations do not prove that every answer claim follows from evidence; human review is required.",
+    "Document-group held-out splits share templates; questions include explicit synthetic scenario markers.",
+    "The pilot test outputs were reviewed before the fixed 100-step run; this is not an unseen blind test.",
+    "Macro citation metrics include empty-set matches; macro refusal consistency includes answerable cases. Use outcomes subset denominators."
+  ]
+}

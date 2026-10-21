@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "document_group",
+    "example_id",
+    "normalized_question",
+    "source_id",
+    "verbatim_evidence"
+  ],
+  "limitation": "Does not prove absence of semantic paraphrase leakage; review source families manually."
+}

@@ -1,0 +1,16 @@
+[
+  {"question": "Python 程序设计课程的总评成绩由哪几部分构成？", "expect": "answer", "topic": "考核方式"},
+  {"question": "作业迟交怎么扣分？", "expect": "answer", "topic": "作业规则"},
+  {"question": "什么是 LEGB 作用域规则？", "expect": "answer", "topic": "函数与作用域"},
+  {"question": "Python 默认递归深度限制是多少？", "expect": "answer", "topic": "递归"},
+  {"question": "为什么不要用空列表作为函数默认参数？", "expect": "answer", "topic": "参数传递"},
+  {"question": "只有先序和后序遍历序列能否唯一确定一棵二叉树？", "expect": "answer", "topic": "二叉树"},
+  {"question": "两个重要极限分别是什么？", "expect": "answer", "topic": "极限"},
+  {"question": "第一类间断点和第二类间断点怎么区分？", "expect": "answer", "topic": "连续性"},
+  {"question": "成绩管理系统对并发和响应时间有什么要求？", "expect": "answer", "topic": "非功能需求"},
+  {"question": "实验报告查重率超过多少会记 0 分？", "expect": "answer", "topic": "学术诚信"},
+  {"question": "成绩申诉需要在几个工作日内提出？", "expect": "answer", "topic": "成绩申诉"},
+  {"question": "量子计算中 Shor 算法的时间复杂度是多少？", "expect": "refuse", "topic": "资料外"},
+  {"question": "Java 的接口和抽象类有什么区别？", "expect": "refuse", "topic": "资料外"},
+  {"question": "红楼梦的作者是谁？", "expect": "refuse", "topic": "资料外"}
+]

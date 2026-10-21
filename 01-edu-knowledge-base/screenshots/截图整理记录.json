@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "image_bytes_unchanged": true,
+  "changes": [
+    {
+      "before": "screenshots/ask-desktop.png",
+      "after": "01_桌面_知识问答.png",
+      "sha256": "c704ac7fc11237d85d7e0cdca4fbccfbce89d3c000ab675a196e4443f761e4ce"
+    },
+    {
+      "before": "screenshots/ask-mobile.png",
+      "after": "02_手机_知识问答.png",
+      "sha256": "9bac206fa99c4c725388c2b010144f86f7bf0dd3410f0ebf76e1beb06789cbf5"
+    },
+    {
+      "before": "screenshots/docs-desktop.png",
+      "after": "03_桌面_资料管理.png",
+      "sha256": "6cf66a11a5f9929c7e67346121894beee36e3f4e12a357e3b15821641e3a1ab5"
+    },
+    {
+      "before": "screenshots/docs-mobile.png",
+      "after": "04_手机_资料管理.png",
+      "sha256": "a77c6541886681cfe3779e8055d79fb3a308351e846865ed58c4d0924a31eae1"
+    },
+    {
+      "before": "screenshots/drawer-desktop.png",
+      "after": "05_桌面_资料详情.png",
+      "sha256": "7400d2bfc1db6750575ca40aff5a531f823d653cce4063ab92bc1e3d9f2d6312"
+    },
+    {
+      "before": "screenshots/history-desktop.png",
+      "after": "06_桌面_问答记录.png",
+      "sha256": "320b445360dbd8425f44ec998bdf2ad8fcc5921f3c01dafb83d5a9b99ef2b26f"
+    },
+    {
+      "before": "screenshots/history-mobile.png",
+      "after": "07_手机_问答记录.png",
+      "sha256": "286649ed03145513b0479792b8cd384b3c6f525dfe456471fb6d886e4e9c8ca8"
+    },
+    {
+      "before": "screenshots/settings-desktop.png",
+      "after": "08_桌面_系统设置.png",
+      "sha256": "c703bd1186f471c5756bb735e59563c91f9171f129bd1c6d6f4208da386d58b3"
+    },
+    {
+      "before": "screenshots/settings-mobile.png",
+      "after": "09_手机_系统设置.png",
+      "sha256": "a32736c94ef5b4cd87a290ac0d07e7772c5f3caa9e199082a76ec326683bbf07"
+    }
+  ]
+}

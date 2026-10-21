@@ -1,0 +1,31 @@
+{
+  "class_name": "Python 程序设计 A 班",
+  "course": "Python 程序设计",
+  "taught_through_week": 4,
+  "topics": [
+    {
+      "topic": "变量与类型",
+      "week": 1
+    },
+    {
+      "topic": "条件分支",
+      "week": 2
+    },
+    {
+      "topic": "循环",
+      "week": 3
+    },
+    {
+      "topic": "函数",
+      "week": 4
+    },
+    {
+      "topic": "列表与字典",
+      "week": 5
+    },
+    {
+      "topic": "异常处理",
+      "week": 6
+    }
+  ]
+}

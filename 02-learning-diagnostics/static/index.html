@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="依据作业、随堂测与课堂互动记录，核对薄弱知识点与分层练习。">
+  <title>EduForge 学情诊断</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="rail">
+  <a href="#overview" class="brand" aria-label="EduForge 学情诊断首页"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 23V13h5v10M12 23V8h5v15M20 23V3h5v20"/></svg><span>EduForge<small>学情诊断</small></span></a>
+  <nav aria-label="主要导航">
+    <a href="#overview" data-nav="overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-7h4v7"/></svg><span>班级报告</span></a>
+    <a href="#students" data-nav="students"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6M17 13a5 5 0 0 1 4 5v2"/></svg><span>学生与练习</span></a>
+    <a href="#import" data-nav="import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg><span>导入数据</span></a>
+    <a href="#history" data-nav="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM8 8h8M8 12h8M8 16h5"/></svg><span>历史报告</span></a>
+  </nav>
+  <div class="rail-foot"><span class="dot"></span> 规则统计 · 本地存储<p>从实际作答证据出发</p></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><span id="scope">学情诊断工作台</span><div class="connection"><span class="dot" id="connection-dot"></span><span id="connection-text">连接中</span><button class="topbar-button" id="token-settings">访问令牌</button></div></header>
+  <main class="sheet" id="main" tabindex="-1">
+    <div id="startup-error" class="notice error" role="alert" hidden></div>
+    <section class="view" id="view-overview" aria-labelledby="overview-title">
+      <div class="page-head"><div><h1 id="overview-title">班级报告</h1><p id="report-subtitle">把分数还原到知识点，决定下一次课补讲什么。</p></div><div class="head-actions"><button class="btn" id="export-report" hidden>导出 Markdown</button><a class="btn primary" href="#import">导入数据</a></div></div>
+      <div id="overview-empty" class="first-run panel">
+        <div class="empty-symbol" aria-hidden="true"><span></span><span></span><span></span></div>
+        <h2>从一份考核记录开始</h2><p>上传作业、随堂测和课堂互动 CSV，结合评分标准与已授课进度，生成可追溯的诊断报告。</p>
+        <div class="actions"><a class="btn primary" href="#import">导入班级 CSV</a><button class="btn" data-demo>体验合成示例</button><a class="text-link" href="/api/diagnostics/sample">下载示例 CSV</a></div>
+        <div class="first-run-steps"><div><span>数据</span><strong>逐条考核记录</strong><p>按学号、知识点与考核类型核对。</p></div><div><span>判断</span><strong>明确边界的统计</strong><p>缺数据与未授课不按零分处理。</p></div><div><span>行动</span><strong>补讲与分层练习</strong><p>每道练习均附提示和参考答案。</p></div></div>
+        <p class="quiet">示例为合成教学数据；系统使用规则计算，不调用大模型。</p>
+      </div>
+      <div id="report-content" hidden>
+        <div class="report-meta"><span id="report-source"></span><span id="report-created"></span><span class="tag" id="demo-tag" hidden>合成示例</span></div>
+        <div class="review-bar"><div><span class="tag" id="review-status">待人工复核</span><p id="review-caption">诊断与分层仅为教学建议，请教师核对原始证据。</p></div><button class="btn" id="open-review">人工复核</button></div>
+        <div class="kpi-strip" id="kpis"></div>
+        <p class="finding" id="report-finding"></p>
+        <div class="analysis-grid">
+          <section class="panel topic-panel"><div class="panel-head"><div><h2>知识点掌握情况</h2><p>只对达到数据要求且已授课的知识点评分</p></div><span class="quiet" id="topic-count"></span></div><div class="table-scroll"><table class="data-table topic-table"><thead><tr><th>知识点 / 教学进度</th><th class="num">掌握度</th><th class="num">薄弱 / 可评估</th><th>补讲优先级</th></tr></thead><tbody id="topic-rows"></tbody></table></div><p class="panel-note">掌握度为 0—100 分；“—”表示未评估，不代表零分。</p></section>
+          <section class="panel reteach-panel"><div class="panel-head"><div><h2>下次课补讲清单</h2><p>先核对证据，再调整教学安排</p></div><span class="quiet" id="reteach-count"></span></div><div id="reteaching"></div></section>
+        </div>
+        <div class="below-grid"><section class="panel"><div class="panel-head"><div><h2>数据质量与范围</h2><p>需要补充或排除的记录</p></div></div><ul class="warning-list" id="warnings"></ul></section><section class="panel"><div class="panel-head"><div><h2>分层练习安排</h2><p>练习建议会随新证据调整</p></div><a class="text-link" href="#students">查看学生 →</a></div><div class="level-counts" id="level-counts"></div><p class="panel-note">数据不足的学生暂不分层，也不生成练习。分层不是固定能力标签。</p></section></div>
+        <details class="methodology"><summary>查看本次评分方法与课程进度</summary><div id="report-methodology"></div></details>
+      </div>
+    </section>
+    <section class="view" id="view-students" aria-labelledby="students-title" hidden>
+      <div class="page-head"><div><h1 id="students-title">学生与练习</h1><p>核对个人薄弱点、原始失分证据和对应练习。</p></div><a class="btn" href="#overview">返回班级报告</a></div>
+      <div class="toolbar"><label class="search-label"><span class="sr-only">按姓名或学号搜索</span><input type="search" id="student-search" placeholder="搜索姓名或学号"></label><label><span class="sr-only">按分层筛选</span><select id="student-level"><option value="">全部学生</option><option value="foundation">基础巩固</option><option value="consolidation">强化提升</option><option value="challenge">拓展挑战</option><option value="insufficient_data">数据不足</option></select></label><span class="quiet" id="student-count"></span></div>
+      <div class="panel"><table class="data-table students-table"><thead><tr><th>学生</th><th class="num">掌握度</th><th>练习分层</th><th>薄弱知识点</th><th class="num">考核记录</th><th><span class="sr-only">操作</span></th></tr></thead><tbody id="student-rows"></tbody></table><div class="empty-row" id="students-empty" hidden></div></div>
+    </section>
+    <section class="view" id="view-import" aria-labelledby="import-title" hidden>
+      <div class="page-head"><div><h1 id="import-title">导入数据</h1><p>每次导入会保存一份独立报告，保留当次评分标准与课程进度。</p></div><a class="btn" href="/api/diagnostics/sample">下载示例 CSV</a></div>
+      <div class="import-grid"><section class="panel form-panel"><h2>生成诊断报告</h2><form id="upload-form">
+        <label class="field">考核记录 CSV <span class="required">必选</span><input type="file" name="file" accept=".csv,text/csv" required><span class="quiet">支持中英文表头，单文件不超过 8 MB。</span></label>
+        <label class="field">班级名称 <span class="optional">选填</span><input name="class_name" maxlength="100" placeholder="留空使用课程进度表中的班级名称"></label>
+        <fieldset><legend>本次评分配置 <span class="optional">选填</span></legend><p class="quiet">不上传时使用下方默认配置。配置仅作用于本次报告。</p><label class="field">课程进度 syllabus.json<input type="file" name="syllabus" accept=".json,application/json"><span class="quiet">含课程、班级、已授课周次与知识点周次。</span></label><label class="field">评分标准 rubric.json<input type="file" name="rubric" accept=".json,application/json"><span class="quiet">含三类考核权重、分层阈值和最低记录数。</span></label></fieldset>
+        <div id="upload-error" class="notice error" role="alert" tabindex="-1" hidden></div><div class="submit-row"><button class="btn primary" type="submit" id="upload-submit">上传并生成报告</button><span class="quiet" id="upload-state" aria-live="polite"></span></div>
+      </form></section><aside class="import-side"><section class="panel"><div class="panel-head"><div><h2>当前默认配置</h2><p>可下载后修改，再随 CSV 一起上传</p></div></div><div id="default-config" class="config-summary"><p class="quiet">正在读取配置…</p></div><div class="download-row"><a class="text-link" href="/api/diagnostics/sample?kind=syllabus">课程进度 JSON ↓</a><a class="text-link" href="/api/diagnostics/sample?kind=rubric">评分标准 JSON ↓</a></div></section><section class="panel sample-panel"><h2>先体验完整流程</h2><p>合成示例包含多类考核、不同掌握程度和未授课知识点，不含真实学生信息。</p><button class="btn" data-demo>生成合成示例报告</button><p class="quiet">报告会明确标注合成数据。</p></section></aside></div>
+      <section class="panel schema-panel"><div class="panel-head"><div><h2>CSV 列说明</h2><p>一行代表一名学生在一个知识点上的一次考核</p></div><span class="quiet">UTF-8 / GB18030 / UTF-16</span></div><div class="table-scroll"><table class="data-table"><thead><tr><th>列名</th><th>英文表头</th><th>要求</th><th>说明</th></tr></thead><tbody id="schema-rows"></tbody></table></div></section>
+      <section class="rules-note"><h2>诊断边界</h2><p>系统只根据实际分值和已标注错因进行统计，不推断心理或认知成因。未授课、进度表之外、记录不足的知识点均不按零分计入。重复记录保留最后一条，非法分数会跳过并记入警告。</p></section>
+    </section>
+    <section class="view" id="view-history" aria-labelledby="history-title" hidden>
+      <div class="page-head"><div><h1 id="history-title">历史报告</h1><p>报告是当次导入数据和配置的快照。</p></div><button class="btn" id="refresh-history">刷新列表</button></div>
+      <div class="toolbar"><label class="search-label"><span class="sr-only">搜索历史班级或课程</span><input type="search" id="history-search" placeholder="搜索班级或课程"></label><span class="quiet" id="history-count"></span></div>
+      <div class="panel"><table class="data-table history-table"><thead><tr><th>班级 / 课程</th><th class="num">学生</th><th class="num">平均掌握度</th><th>来源</th><th class="num">生成时间</th><th><span class="sr-only">操作</span></th></tr></thead><tbody id="history-rows"></tbody></table><div class="empty-row" id="history-empty" hidden></div></div>
+    </section>
+    <footer class="page-footer">EduForge · 学情诊断与分层练习<span>按成绩证据统计，按教学进度判断</span></footer>
+  </main>
+</div>
+<dialog id="student-dialog" class="detail-dialog" aria-labelledby="student-dialog-title"><div class="dialog-head"><div><p class="quiet" id="student-dialog-id"></p><h2 id="student-dialog-title">学生详情</h2></div><button class="icon-button" data-close="student-dialog" aria-label="关闭学生详情">×</button></div><div id="student-detail"></div></dialog>
+<dialog id="topic-dialog" class="detail-dialog" aria-labelledby="topic-dialog-title"><div class="dialog-head"><div><p class="quiet">知识点原始证据</p><h2 id="topic-dialog-title">知识点详情</h2></div><button class="icon-button" data-close="topic-dialog" aria-label="关闭知识点详情">×</button></div><div id="topic-detail"></div></dialog>
+<dialog id="token-dialog" class="detail-dialog small-dialog" aria-labelledby="token-title"><div class="dialog-head"><div><h2 id="token-title">访问令牌</h2></div><button class="icon-button" data-close="token-dialog" aria-label="关闭令牌设置">×</button></div><p class="dialog-intro" id="auth-help">服务器设置访问令牌后，需要填写令牌才能读取成绩报告。</p><form id="token-form"><label class="field">令牌<input id="token-input" type="password" autocomplete="off" placeholder="输入服务器配置的访问令牌"></label><p class="quiet">令牌仅保存在当前浏览器标签页的会话中。成绩文件只应上传到受信任的本地或内网服务。</p><div class="actions"><button class="btn primary" type="submit">保存并连接</button><button class="btn" type="button" id="clear-token">清除令牌</button></div></form></dialog>
+<dialog id="review-dialog" class="detail-dialog small-dialog" aria-labelledby="review-title"><div class="dialog-head"><div><h2 id="review-title">人工复核</h2></div><button class="icon-button" data-close="review-dialog" aria-label="关闭人工复核">×</button></div><p class="dialog-intro">先核对成绩、课程进度、缺失数据和错因证据。练习分层只用于教学建议，不自动用于处罚或正式评价。</p><form id="review-form"><label class="field">复核人<input name="reviewer" required maxlength="80" placeholder="填写实际复核教师姓名"></label><label class="field">复核备注 <span class="optional">选填</span><textarea name="note" maxlength="500" rows="3" placeholder="记录补充说明或需要继续核对的内容"></textarea></label><div id="review-error" class="notice error" role="alert" hidden></div><div class="actions"><button class="btn primary" type="submit" id="save-review">标记已复核</button><button class="btn" type="button" id="reset-review" hidden>撤回至待复核</button></div></form><details class="audit-details"><summary>报告操作记录</summary><ul class="evidence-list" id="audit-log"></ul></details></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p class="noscript">此应用需要 JavaScript 读取诊断接口；也可打开 <a href="/api/docs">API 文档</a>使用接口。</p></noscript>
+</body>
+</html>

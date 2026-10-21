@@ -1,0 +1,14 @@
+{"id": "calculus-terminology_format", "output": "{\"answer\": \"函数在一点的极限等于该点函数值。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-grounded", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-integration", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等；函数在一点连续要求函数值有定义、极限存在且极限等于函数值。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-citation", "output": "{\"answer\": \"函数在内点的双侧极限存在，要求左极限与右极限都存在且相等；函数在一点连续要求函数值有定义、极限存在且极限等于函数值。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "calculus-refusal-no_context", "output": "{\"answer\": \"暂无信息\", \"citations\": [], \"refused\": true, \"missing_information\": \"请提供相关资料以便解答\"}"}
+{"id": "calculus-refusal-irrelevant", "output": "{\"answer\": \"无\", \"citations\": [], \"refused\": true, \"missing_information\": \"无\"}"}
+{"id": "calculus-refusal-conflict", "output": "{\"answer\": \"2026年11月1日；2026年11月2日\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-terminology_format", "output": "{\"answer\": \"参数化查询：把查询结构与参数值分离的数据库查询方式。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-grounded", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-integration", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。；用户密码应使用适合密码的带盐哈希保存；普通可逆加密不能替代密码哈希。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-citation", "output": "{\"answer\": \"数据库查询应使用参数化查询，不能将不可信输入直接拼接为 SQL。；用户密码应使用适合密码的带盐哈希保存；普通可逆加密不能替代密码哈希。\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}
+{"id": "secure-coding-refusal-no_context", "output": "{\"answer\": \"暂无信息\", \"citations\": [], \"refused\": true, \"missing_information\": \"请提供相关信息\"}"}
+{"id": "secure-coding-refusal-irrelevant", "output": "{\"answer\": \"无\", \"citations\": [], \"refused\": true, \"missing_information\": \"《安全编程课堂讲义》的补测日期具体是哪一天？（irrelevant场景）\"}"}
+{"id": "secure-coding-refusal-conflict", "output": "{\"answer\": \"2026年11月1日\", \"citations\": [], \"refused\": false, \"missing_information\": \"\"}"}

@@ -1,0 +1,140 @@
+{
+  "变量与类型": {
+    "foundation": [
+      {
+        "question": "写出 int('12') + 3 的结果，并说明结果类型。",
+        "answer": "结果为 15，类型为 int。",
+        "hint": "先将字符串 '12' 转成整数，再执行整数加法。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "输入价格字符串 '19.5' 与数量字符串 '2'，写出计算总价的表达式。",
+        "answer": "float('19.5') * int('2')，结果为 39.0。",
+        "hint": "金额可含小数，数量为整数；不要把两个字符串直接相乘。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "为什么 0.1 + 0.2 == 0.3 可能为 False？给出适合近似比较的写法。",
+        "answer": "二进制浮点数不能精确表示所有十进制小数。可用 abs((0.1 + 0.2) - 0.3) < 1e-9；金融计算应选 Decimal。",
+        "hint": "区分数学值和浮点存储近似值。"
+      }
+    ]
+  },
+  "条件分支": {
+    "foundation": [
+      {
+        "question": "当 score = 60 时，if score >= 60: result = '通过' else: result = '补练'，result 是什么？",
+        "answer": "result 为 '通过'，因为边界 60 满足 >= 60。",
+        "hint": "特别检查恰好等于阈值的情形。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "把分数分为优秀（≥80）、合格（≥60）、补练（其余），写出 if/elif/else 的判断顺序。",
+        "answer": "先判断 score >= 80，再 elif score >= 60，最后 else。",
+        "hint": "先判断更严格的高分条件，避免被较宽条件提前拦截。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "设计对分数输入 -1、0、59.9、60、80、100、101 的分支测试，说明哪些输入应拒绝。",
+        "answer": "-1 和 101 越界应拒绝；0、59.9 属补练，60 属合格，80、100 属优秀。",
+        "hint": "先做 0≤score≤100 的合法性判断，再覆盖两个分层边界。"
+      }
+    ]
+  },
+  "循环": {
+    "foundation": [
+      {
+        "question": "写出 list(range(1, 4)) 的结果。",
+        "answer": "[1, 2, 3]。",
+        "hint": "range 包含左端点，不包含右端点。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "用 for 循环计算 1 到 10（含 10）的整数和。",
+        "answer": "total = 0；循环 for n in range(1, 11): total += n，最后得到 55。",
+        "hint": "右端点要写 11，累加器放在循环之前。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "写出判断正整数 n 是否为素数的思路，并处理 n=1、2、9 三个边界。",
+        "answer": "n<2 返回 False；从 2 检查到 int(sqrt(n))，若能整除则 False，否则 True。1非素数，2是素数，9非素数。",
+        "hint": "不需要试除到 n；确保循环上界包含平方根。"
+      }
+    ]
+  },
+  "函数": {
+    "foundation": [
+      {
+        "question": "函数 def add(a, b): return a + b，add(2, 3) 的返回值是什么？",
+        "answer": "返回整数 5。",
+        "hint": "return 把结果交回调用者，不等同于 print。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "为什么函数内 print(total) 不能代替 return total？如何使调用者获得计算结果？",
+        "answer": "print 只输出显示；未写 return 的函数返回 None。用 return total，让调用者通过 result = function() 接收。",
+        "hint": "观察显示输出与赋值后变量的值是否相同。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "给出一个避免默认可变参数陷阱的 append_item 函数设计。",
+        "answer": "def append_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items",
+        "hint": "默认参数只在定义时求值；每次调用需要新列表时用 None 哨兵。"
+      }
+    ]
+  },
+  "列表与字典": {
+    "foundation": [
+      {
+        "question": "给出列表 [10, 20, 30] 中索引 1 的值。",
+        "answer": "20，列表索引从 0 开始。",
+        "hint": "索引 0 对应第一个元素。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "统计列表 ['a','b','a'] 中每个字符串的出现次数，输出字典。",
+        "answer": "{'a': 2, 'b': 1}；可循环执行 counts[x] = counts.get(x, 0) + 1。",
+        "hint": "字典按元素本身作为键，缺失时从 0 开始。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "如何在保留原顺序的前提下，对可能包含不可哈希字典的列表去重？",
+        "answer": "维护结果列表，逐个检查 item not in result 后追加；支持字典，但通常为 O(n²)。若明确元素可哈希，可用集合辅助提高效率。",
+        "hint": "先确认元素能否进入集合；不要默认所有对象都可哈希。"
+      }
+    ]
+  },
+  "异常处理": {
+    "foundation": [
+      {
+        "question": "int('abc') 会产生什么异常？怎样避免程序直接退出？",
+        "answer": "产生 ValueError；使用 try/except ValueError 捕获并提示重新输入。",
+        "hint": "按具体异常类型捕获。"
+      }
+    ],
+    "consolidation": [
+      {
+        "question": "写出一个输入分母并做除法的流程，分别处理非法数字和分母为零。",
+        "answer": "try 中转换数字并执行除法；except ValueError 提示数字格式错误；except ZeroDivisionError 提示分母不能为零。",
+        "hint": "转换失败和数学操作失败是不同的错误来源。"
+      }
+    ],
+    "challenge": [
+      {
+        "question": "为什么不应使用 except: pass 包住整个数据处理流程？给出改进原则。",
+        "answer": "会吞掉具体错误和终止信号，使结果不完整却看似成功。应缩小 try 边界、捕获预期异常并保留记录或明确返回失败。",
+        "hint": "错误需要可追踪，批次处理应区分逐项失败与系统故障。"
+      }
+    ]
+  }
+}

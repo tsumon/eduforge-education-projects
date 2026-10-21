@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f4f7">
+  <title>EduForge · 教育知识库</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/Geist-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+  <symbol id="i-ask" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 4V6a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5C8 2 3 4 3 4v15s5-2 9 1c4-3 9-1 9-1V4s-5-2-9 1Zm0 0v15"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m6 12 6-6 6 6M12 6v13"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8M8 16h6"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="m8 7 4-4 4 4M12 3v12M4 14v6h16v-6"/></symbol>
+</defs></svg>
+<nav class="rail tabs" aria-label="主导航">
+  <a href="#ask" class="brand-mark" title="EduForge 首页" aria-label="EduForge 首页"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8l3 4 3-4h8v20h-8l-3-4-3 4H5Z"/><path d="M16 10v12M9 12h3M20 12h3M9 17h3M20 17h3"/></svg></a>
+  <div class="rail-links">
+    <a href="#ask" data-view="ask" title="知识问答" aria-label="知识问答"><svg><use href="#i-ask"/></svg><span>问答</span></a>
+    <a href="#docs" data-view="docs" title="课程资料" aria-label="课程资料"><svg><use href="#i-book"/></svg><span>资料</span></a>
+    <a href="#history" data-view="history" title="问答记录" aria-label="问答记录"><svg><use href="#i-clock"/></svg><span>记录</span></a>
+  </div>
+  <a href="#settings" data-view="settings" class="rail-settings" title="知识库设置" aria-label="知识库设置"><svg><use href="#i-settings"/></svg><span>设置</span></a>
+</nav>
+<div class="app-shell">
+  <header class="appbar">
+    <a class="brand" href="#ask">EduForge <span>/</span> <span>教育知识库</span></a>
+    <div class="appbar-status" aria-live="polite"><span class="dot" id="status-dot" aria-hidden="true"></span><span id="status-text">正在连接知识库</span><span class="pill" id="status-mode">—</span></div>
+  </header>
+  <main class="content">
+    <section class="view" id="view-ask" data-view="ask" aria-labelledby="ask-title">
+      <header class="page-head"><div><h1 id="ask-title">知识问答</h1><p>从课程资料出发，让每个回答都有出处。</p></div><button type="button" class="btn" id="btn-new-question"><svg><use href="#i-plus"/></svg>新建提问</button></header>
+      <div class="workspace">
+        <aside class="knowledge-rail" aria-label="知识库概览">
+          <div class="section-head"><h2>当前知识库</h2><a href="#docs">管理资料</a></div>
+          <dl class="library-counts"><div><dt>资料总数</dt><dd id="library-doc-count">—</dd></div><div><dt>知识分片</dt><dd id="library-chunk-count">—</dd></div></dl>
+          <div class="category-list" id="workspace-categories"></div>
+          <div class="section-head source-head"><h2>知识来源</h2><span id="source-count" class="muted"></span></div>
+          <div class="source-list" id="workspace-source-list"><p class="muted">正在读取资料…</p></div>
+          <a class="view-all" href="#docs">查看全部资料 <span aria-hidden="true">↗</span></a>
+          <div class="section-head recent-head"><h2>最近提问</h2><a href="#history">全部记录</a></div>
+          <div class="recent-list" id="recent-questions"><p class="muted">还没有问答记录</p></div>
+          <p class="rail-note">所有回答均可回溯至原文。超出资料范围的问题会保留拒答记录。</p>
+        </aside>
+        <div class="question-workspace">
+          <div id="answer-area" aria-live="polite">
+            <div class="welcome" id="answer-empty">
+              <svg class="welcome-book" aria-hidden="true"><use href="#i-book"/></svg>
+              <h2>查询课程，核对依据。</h2>
+              <p>查找课程要求、理解知识点，或核对项目文档。回答与引用原文放在一起，方便逐条确认。</p>
+              <p id="answer-empty-docs" hidden>知识库暂无资料，<a href="#docs">先导入第一份课程文档</a>。</p>
+              <div class="workflow"><span>检索课程资料</span><span aria-hidden="true">→</span><span>核对原文证据</span><span aria-hidden="true">→</span><span>保留问答记录</span></div>
+            </div>
+          </div>
+          <form class="ask-card" id="form-ask">
+            <label for="question">向知识库提问</label>
+            <textarea id="question" name="question" rows="3" maxlength="500" placeholder="例如：Python 课程的成绩如何构成？" required></textarea>
+            <div class="ask-foot"><span class="ask-hint" id="ask-hint">仅依据已导入资料回答</span><div><span class="keyboard-hint">Enter 发送 · Shift + Enter 换行</span><button type="submit" class="btn btn-primary" id="btn-ask"><span>发送问题</span><svg><use href="#i-arrow"/></svg></button></div></div>
+          </form>
+          <details class="samples" id="samples" hidden><summary>用示例问题试一试</summary><div class="chips" id="sample-chips"></div></details>
+          <p class="workspace-note">回答供学习参考，请结合引用原文核实。未接入模型时使用原文抽取。</p>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-docs" data-view="docs" hidden aria-labelledby="docs-title">
+      <header class="page-head"><div><h1 id="docs-title">课程资料</h1><p>统一管理课程讲义、教学文档与实战项目资料。</p></div><div class="head-actions"><button type="button" class="btn" id="btn-new-text">新建文本</button><button type="button" class="btn btn-primary" id="btn-import"><svg><use href="#i-upload"/></svg>导入资料</button></div></header>
+      <div class="toolbar"><input type="search" id="doc-search" placeholder="搜索标题或来源" aria-label="搜索资料"><select id="doc-filter" aria-label="按分类筛选"><option value="">全部分类</option></select><span class="toolbar-spacer"></span><span class="muted" id="doc-summary"></span></div>
+      <div class="table-wrap"><table class="table" id="doc-table"><thead><tr><th>资料标题</th><th>分类</th><th>来源文件</th><th class="num">分片</th><th class="date-col">导入时间</th><th class="actions"><span class="visually-hidden">操作</span></th></tr></thead><tbody id="doc-rows"></tbody></table>
+        <div class="empty-state" id="doc-empty" hidden><h2>导入第一份课程资料</h2><p>支持 TXT、Markdown、CSV、Word 和带文本层的 PDF，可同时导入多个文件。</p><p><button type="button" class="link-btn" id="btn-load-samples">载入 7 份示例资料</button><span class="muted"> · 合成课程数据，仅供试用</span></p></div><p class="table-foot muted" id="doc-foot"></p>
+      </div>
+    </section>
+    <section class="view" id="view-history" data-view="history" hidden aria-labelledby="history-title">
+      <header class="page-head"><div><h1 id="history-title">问答记录</h1><p>回看问题、引用与反馈，保留每次回答的判断依据。</p></div><a class="btn" id="btn-export-jsonl" href="/api/knowledge/history/export.jsonl" download>导出 JSONL</a></header>
+      <div class="toolbar"><div class="segmented" role="group" aria-label="筛选回答结果"><button type="button" data-refused="" class="on">全部</button><button type="button" data-refused="false">已回答</button><button type="button" data-refused="true">资料不足</button></div><input type="search" id="history-search" placeholder="搜索历史问题" aria-label="搜索问题"></div>
+      <div class="table-wrap"><table class="table" id="history-table"><thead><tr><th>问题</th><th>回答结果</th><th class="num">引用</th><th>用户反馈</th><th class="date-col">提问时间</th></tr></thead><tbody id="history-rows"></tbody></table><div class="empty-state" id="history-empty" hidden><h2>暂无符合条件的记录</h2><p>试试其他关键词，或发起一次新的提问。</p></div><div class="pager" id="history-pager"><span class="muted" id="history-count"></span><button type="button" class="btn btn-sm" id="history-prev">上一页</button><button type="button" class="btn btn-sm" id="history-next">下一页</button></div></div>
+    </section>
+    <section class="view" id="view-settings" data-view="settings" hidden aria-labelledby="settings-title">
+      <header class="page-head"><div><h1 id="settings-title">知识库设置</h1><p>查看回答策略、模型连接与服务状态。</p></div><button type="button" class="btn" id="refresh-settings">刷新状态</button></header>
+      <div class="settings-grid">
+        <section class="settings-section"><div><h2>回答策略</h2><p class="muted">证据充分时回答，资料不足时拒答。以下为当前生效的检索阈值。</p></div><div class="card"><table class="kv" id="policy-table"></table></div></section>
+        <section class="settings-section"><div><h2>模型连接</h2><p class="muted">原文抽取无需外部服务。接入模型后，回答仍须引用检索到的资料。</p></div><div class="card"><div id="llm-info"></div><details class="connection-help"><summary>如何接入模型</summary><p>在服务启动前配置 <code>EDU_LLM_BASE_URL</code>、<code>EDU_LLM_API_KEY</code> 和 <code>EDU_LLM_MODEL</code>。引用编号不合法时会自动降级为原文抽取。</p></details></div></section>
+        <section class="settings-section"><div><h2>运行状态</h2><p class="muted">索引、问答与反馈数据来自当前运行服务。</p></div><div class="card"><table class="kv" id="runtime-table"></table></div></section>
+        <section class="settings-section"><div><h2>访问令牌</h2><p class="muted">仅在服务启用访问控制时需要。令牌保存在本机浏览器中。</p></div><div class="card"><form id="form-token" class="inline-form"><label class="field" for="token-input">服务访问令牌<input type="password" id="token-input" placeholder="输入访问令牌" autocomplete="off"></label><div class="head-actions"><button type="submit" class="btn">保存令牌</button><button type="button" class="btn" id="token-clear">清除</button></div></form></div></section>
+      </div>
+    </section>
+  </main>
+</div>
+<dialog id="dlg-import" class="dialog"><form id="form-upload" method="dialog"><h2>导入课程资料</h2><p class="muted">按标题与段落拆分知识片段，保留文件来源。</p><label class="field">资料分类<select name="category" class="sel-category"></select></label><label class="field">选择文件<input type="file" name="files" multiple accept=".txt,.md,.markdown,.csv,.docx,.pdf" required><span class="muted">支持 TXT / MD / CSV / DOCX / PDF，单文件不超过 8 MB。</span></label><div class="dialog-foot"><button type="button" class="btn" data-close>取消</button><button type="submit" class="btn btn-primary">开始导入</button></div></form></dialog>
+<dialog id="dlg-text" class="dialog"><form id="form-text" method="dialog"><h2>新建文本资料</h2><label class="field">标题<input name="title" required maxlength="200" placeholder="例如：第 6 讲 · 列表与字典"></label><label class="field">资料分类<select name="category" class="sel-category"></select></label><label class="field">正文<textarea name="content" rows="9" required minlength="20" placeholder="粘贴课程内容，至少 20 字。支持 Markdown 标题。"></textarea></label><div class="dialog-foot"><button type="button" class="btn" data-close>取消</button><button type="submit" class="btn btn-primary">保存资料</button></div></form></dialog>
+<aside class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1"><div class="drawer-head"><h2 id="drawer-title"></h2><button type="button" class="icon-btn" id="drawer-close" aria-label="关闭资料详情">×</button></div><dl class="drawer-meta" id="drawer-meta"></dl><h3>知识分片 <span class="muted" id="drawer-chunk-count"></span></h3><ol class="chunk-list" id="drawer-chunks"></ol><div class="drawer-foot"><button type="button" class="btn btn-danger" id="drawer-delete">删除资料</button></div></aside><div class="scrim" id="scrim" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<template id="tpl-answer"><article class="answer"><header class="answer-head"><div><p class="answer-label">你的问题</p><h2 class="answer-q"></h2></div><div class="answer-meta"><span class="pill pill-mode"></span><time class="answer-time"></time></div></header><div class="answer-grid"><section class="answer-main"><div class="answer-body"><h3 class="result-title">回答</h3><ol class="points"></ol><p class="answer-text" hidden></p><p class="refusal" hidden></p><span class="stamp" hidden>未找到充分依据</span></div><footer class="answer-foot"><div class="feedback" role="group" aria-label="这条回答有帮助吗"><span class="muted">回答有帮助吗？</span><button type="button" class="btn btn-sm" data-helpful="true">有帮助</button><button type="button" class="btn btn-sm" data-helpful="false">没帮助</button><span class="feedback-state muted"></span></div><a class="link export" href="#" download>导出 Markdown</a></footer><details class="diag"><summary>查看检索依据</summary><pre></pre></details></section><section class="citations" hidden><div class="section-head"><h3>原文证据</h3><span class="muted">可回溯</span></div><ol class="citation-list"></ol></section></div></article></template>
+<script src="/app.js"></script>
+</body>
+</html>

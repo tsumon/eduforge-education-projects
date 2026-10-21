@@ -1,0 +1,126 @@
+{
+  "before": {
+    "url": "http://127.0.0.1:8001",
+    "at": "2026-10-21T08:44:43.481Z",
+    "findings": [
+      {
+        "level": "WARN",
+        "id": "palette-cream",
+        "width": 1440,
+        "message": "Yellow-cream background (button #fcfcfa).",
+        "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+        "alsoAt": [
+          768,
+          390
+        ]
+      },
+      {
+        "level": "WARN",
+        "id": "contrast",
+        "width": 1440,
+        "message": "Low-contrast text: \"示例问题\" 4.4:1 needs 4.5:1; \"输入问题后，系统从资料中检索证据，逐条给出原文摘录与出处。\" 4.4:1 needs 4.5:1",
+        "fix": "Darken or lighten the text colour.",
+        "alsoAt": [
+          768,
+          390
+        ]
+      },
+      {
+        "level": "FAIL",
+        "id": "font-not-dealt",
+        "width": 1440,
+        "message": "The sheet dealt Geist, but the page renders Noto Sans CJK SC.",
+        "fix": "Load the dealt face (the link on the sheet) and put it first in font-family. A build that falls back to a default face lands on the default look."
+      },
+      {
+        "level": "WARN",
+        "id": "hero-void",
+        "width": 1440,
+        "message": "47% of the first screen is one empty block (1440×420px at 0,480).",
+        "fix": "Place the void on purpose or fill it: move the picture, the film or one fact into it, grow the headline to meet it, or shrink the screen to its content. A void reads as placed only when something closes it on the far side and it is the screen's one rest."
+      },
+      {
+        "level": "WARN",
+        "id": "numeric-align",
+        "width": 1440,
+        "message": "8 of 8 numeric table cells are left-aligned.",
+        "fix": "Right-align numbers, amounts and percentages (and their column headers) so the digits line up.",
+        "alsoAt": [
+          768,
+          390
+        ]
+      },
+      {
+        "level": "FAIL",
+        "id": "no-title",
+        "width": 1440,
+        "message": "The screen has no h1.",
+        "fix": "Name the screen in an h1 at the top of the canvas (18–28px): \"Overview\", \"Payouts\", the project's name.",
+        "alsoAt": [
+          768,
+          390
+        ]
+      },
+      {
+        "level": "WARN",
+        "id": "edge-text",
+        "width": 390,
+        "message": "1 text block(s) sit 12–15px from the phone's edge: \"EduForge\" (14px)",
+        "fix": "The page margin is 16–20px on a phone; the header and the corner labels sit on it too."
+      }
+    ],
+    "widths": [
+      1440,
+      768,
+      390
+    ]
+  },
+  "after": {
+    "url": "http://127.0.0.1:8001",
+    "at": "2026-10-21T09:09:18.216Z",
+    "findings": [],
+    "widths": [
+      1440,
+      768,
+      390
+    ]
+  },
+  "docs": {
+    "url": "http://127.0.0.1:8001/#docs",
+    "at": "2026-10-21T09:02:09.117Z",
+    "findings": [],
+    "widths": [
+      1440,
+      768,
+      390
+    ]
+  },
+  "history": {
+    "url": "http://127.0.0.1:8001/#history",
+    "at": "2026-10-21T09:06:02.891Z",
+    "findings": [
+      {
+        "level": "WARN",
+        "id": "hero-void",
+        "width": 1440,
+        "message": "31% of the first screen is one empty block (660×600px at 600,300).",
+        "fix": "Place the void on purpose or fill it: move the picture, the film or one fact into it, grow the headline to meet it, or shrink the screen to its content. A void reads as placed only when something closes it on the far side and it is the screen's one rest."
+      }
+    ],
+    "widths": [
+      1440,
+      768,
+      390
+    ]
+  },
+  "settings": {
+    "url": "http://127.0.0.1:8001/#settings",
+    "at": "2026-10-21T09:06:14.499Z",
+    "findings": [],
+    "widths": [
+      1440,
+      768,
+      390
+    ]
+  }
+}

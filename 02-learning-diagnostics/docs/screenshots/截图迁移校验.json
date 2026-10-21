@@ -1,0 +1,152 @@
+{
+  "screenshot_path_base": "project_root",
+  "moved_at": "2026-10-21T11:02:27.2983044Z",
+  "file_count": 18,
+  "all_byte_identical": true,
+  "files": [
+    {
+      "old_path": "docs/screenshots/desktop-empty.png",
+      "screenshot_path": "01_桌面_初始空态.png",
+      "bytes": 64835,
+      "sha256_before": "800aab1fe3694d05d4b4647480e37287a21798b5b0b96b7d1bb7088cafc30510",
+      "sha256_after": "800aab1fe3694d05d4b4647480e37287a21798b5b0b96b7d1bb7088cafc30510",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/desktop-overview.png",
+      "screenshot_path": "02_桌面_班级报告.png",
+      "bytes": 203319,
+      "sha256_before": "0795c769f15274b297c6c24a59d6f46bbee61938029faa7750b1e1a2412158ad",
+      "sha256_after": "0795c769f15274b297c6c24a59d6f46bbee61938029faa7750b1e1a2412158ad",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/desktop-students.png",
+      "screenshot_path": "03_桌面_学生列表.png",
+      "bytes": 87790,
+      "sha256_before": "43eba9c3b21c1e202939e2f01eb083822bd435dd81d7f7c81b60c7b653417e15",
+      "sha256_after": "43eba9c3b21c1e202939e2f01eb083822bd435dd81d7f7c81b60c7b653417e15",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/desktop-student-detail.png",
+      "screenshot_path": "04_桌面_学生证据与练习.png",
+      "bytes": 105098,
+      "sha256_before": "785dd5ec407e9f587025b97ac3e7883bff102eb5126074b01d532180dde82668",
+      "sha256_after": "785dd5ec407e9f587025b97ac3e7883bff102eb5126074b01d532180dde82668",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/desktop-review.png",
+      "screenshot_path": "05_桌面_人工复核.png",
+      "bytes": 137559,
+      "sha256_before": "3bff91a239ebdf43ea3fa5eaca2fdfc19c9f7963f14490dffa161dbd3fb55e0b",
+      "sha256_after": "3bff91a239ebdf43ea3fa5eaca2fdfc19c9f7963f14490dffa161dbd3fb55e0b",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/desktop-import.png",
+      "screenshot_path": "06_桌面_导入与校验.png",
+      "bytes": 180429,
+      "sha256_before": "ae7c356ce35411f8ab6cd5c4014329fcbc948fe4468c5d7877e9f2f84341df6d",
+      "sha256_after": "ae7c356ce35411f8ab6cd5c4014329fcbc948fe4468c5d7877e9f2f84341df6d",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-overview.png",
+      "screenshot_path": "07_手机_班级报告.png",
+      "bytes": 170129,
+      "sha256_before": "38891e4736e1b570724c574f368bdf12bbd406a4a19c7e48ba51e45dcbd739d4",
+      "sha256_after": "38891e4736e1b570724c574f368bdf12bbd406a4a19c7e48ba51e45dcbd739d4",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-students.png",
+      "screenshot_path": "08_手机_学生列表.png",
+      "bytes": 76721,
+      "sha256_before": "debb173d021dbf18e0cded4d5674b78e7d11d2f301cff872c63e90df87d6a417",
+      "sha256_after": "debb173d021dbf18e0cded4d5674b78e7d11d2f301cff872c63e90df87d6a417",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-student-detail.png",
+      "screenshot_path": "09_手机_学生证据与练习.png",
+      "bytes": 44341,
+      "sha256_before": "7fa5ccd7bed014ab8d3e0cb325517f4953bc1a2d492680f423a4643ce56cb020",
+      "sha256_after": "7fa5ccd7bed014ab8d3e0cb325517f4953bc1a2d492680f423a4643ce56cb020",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-review.png",
+      "screenshot_path": "10_手机_人工复核.png",
+      "bytes": 39505,
+      "sha256_before": "87e8762036c03bc58123cf64d2d43edd06d9135d43e2099fba5fd8c7c2dac8e2",
+      "sha256_after": "87e8762036c03bc58123cf64d2d43edd06d9135d43e2099fba5fd8c7c2dac8e2",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-import.png",
+      "screenshot_path": "11_手机_导入与校验.png",
+      "bytes": 145826,
+      "sha256_before": "47bde5c104b425a15fc05ffdaa148860f88d41ae77244de4d2c7ccf5a35fb12a",
+      "sha256_after": "47bde5c104b425a15fc05ffdaa148860f88d41ae77244de4d2c7ccf5a35fb12a",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/mobile-history.png",
+      "screenshot_path": "12_手机_历史报告.png",
+      "bytes": 32770,
+      "sha256_before": "ec49d6373050647ce0ead08ac9ce78aa5b8de779c98c104d2713320f9dc8287c",
+      "sha256_after": "ec49d6373050647ce0ead08ac9ce78aa5b8de779c98c104d2713320f9dc8287c",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/desktop-fold.jpg",
+      "screenshot_path": "13_桌面_设计检查首屏.jpg",
+      "bytes": 113671,
+      "sha256_before": "646a9e44787f32c7fb5d1033135494aebb72d3534c6798e293b4c7d3c240b318",
+      "sha256_after": "646a9e44787f32c7fb5d1033135494aebb72d3534c6798e293b4c7d3c240b318",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/desktop-page-01.jpg",
+      "screenshot_path": "14_桌面_设计检查长页.jpg",
+      "bytes": 67305,
+      "sha256_before": "bea05fdad88f20c539cad4b3028b8079394d3140179ce39d6348a9b2a5735cf9",
+      "sha256_after": "bea05fdad88f20c539cad4b3028b8079394d3140179ce39d6348a9b2a5735cf9",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/tablet-fold.jpg",
+      "screenshot_path": "15_平板_设计检查首屏.jpg",
+      "bytes": 78781,
+      "sha256_before": "79695f90229804f63ec75305375c683c3a9008cb0f6b47f32653469426552197",
+      "sha256_after": "79695f90229804f63ec75305375c683c3a9008cb0f6b47f32653469426552197",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/tablet-page-01.jpg",
+      "screenshot_path": "16_平板_设计检查长页.jpg",
+      "bytes": 112202,
+      "sha256_before": "591f1c617515b90a965638ae0561a1e436868a79efa10ac6ea0a95282398836a",
+      "sha256_after": "591f1c617515b90a965638ae0561a1e436868a79efa10ac6ea0a95282398836a",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/mobile-fold.jpg",
+      "screenshot_path": "17_手机_设计检查首屏.jpg",
+      "bytes": 47639,
+      "sha256_before": "8c4fdcf5ea4cf2fec9f54eb1830b0a6250b21b4010aad1d2dbdb6a2c961a3907",
+      "sha256_after": "8c4fdcf5ea4cf2fec9f54eb1830b0a6250b21b4010aad1d2dbdb6a2c961a3907",
+      "verified": true
+    },
+    {
+      "old_path": "docs/screenshots/taste-inspect/mobile-page-01.jpg",
+      "screenshot_path": "18_手机_设计检查长页.jpg",
+      "bytes": 169738,
+      "sha256_before": "a299ccca3ede887ec53a80822bf294c4e0d46683428cacb41dd9c1d8e087854f",
+      "sha256_after": "a299ccca3ede887ec53a80822bf294c4e0d46683428cacb41dd9c1d8e087854f",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "started_at": "2026-10-21T09:35:45.313Z",
+  "service": "http://127.0.0.1:8004",
+  "test_data_dir": "runtime-browser-review",
+  "auth_service": "http://127.0.0.1:8005",
+  "auth_test_data_dir": "runtime-browser-auth",
+  "checks": [
+    {
+      "name": "real empty 8002 has no invented report",
+      "passed": true,
+      "ms": 766
+    },
+    {
+      "name": "explicit demo creates a real synthetic report",
+      "passed": true,
+      "ms": 450,
+      "evidence": {
+        "id": "report_43054976e4f5",
+        "summary": {
+          "student_count": 8,
+          "topic_count": 6,
+          "average_mastery": 70.2,
+          "at_risk_count": 2,
+          "record_count": 98,
+          "assessed_student_count": 8,
+          "insufficient_student_count": 0
+        },
+        "is_demo": true,
+        "untaught": [
+          {
+            "topic": "列表与字典",
+            "mastery": null
+          },
+          {
+            "topic": "异常处理",
+            "mastery": null
+          }
+        ],
+        "rendered_untaught": [
+          "—",
+          "—"
+        ]
+      }
+    },
+    {
+      "name": "topic opens original row evidence",
+      "passed": true,
+      "ms": 13
+    },
+    {
+      "name": "students filter and reveal hints and answers",
+      "passed": true,
+      "ms": 489,
+      "evidence": {
+        "student_id": "S001",
+        "original_evidence": [
+          "第 2 行 · S001 · 变量与类型 · 作业「W1-1」 · 48/100（48%） · 2026-10-01 · 错因标签：类型转换；备注：合成演示数据",
+          "第 3 行 · S001 · 变量与类型 · 随堂测「W1-2」 · 44/100（44%） · 2026-10-02 · 错因标签：类型转换；备注：合成演示数据",
+          "第 4 行 · S001 · 变量与类型 · 课堂互动「W1-3」 · 54/100（54%） · 2026-10-03 · 错因标签：类型转换；备注：合成演示数据"
+        ],
+        "exercise_count": 4
+      }
+    },
+    {
+      "name": "teacher review and reset persist with audit log",
+      "passed": true,
+      "ms": 528,
+      "evidence": {
+        "reviewed": {
+          "status": "reviewed",
+          "reviewer": "浏览器回归教师",
+          "note": "已核对合成示例中的未授课排除与原始失分证据。",
+          "reviewed_at": "2026-10-21T17:35:47+08:00"
+        },
+        "reset": {
+          "review": {
+            "status": "pending",
+            "reviewer": "浏览器回归教师",
+            "note": "已核对合成示例中的未授课排除与原始失分证据。",
+            "reviewed_at": null
+          },
+          "audit": [
+            {
+              "action": "created",
+              "created_at": "2026-10-21T17:35:46+08:00",
+              "source_name": "classroom_synthetic.csv",
+              "is_demo": true
+            },
+            {
+              "action": "reviewed",
+              "created_at": "2026-10-21T17:35:47+08:00",
+              "reviewer": "浏览器回归教师",
+              "note": "已核对合成示例中的未授课排除与原始失分证据。"
+            },
+            {
+              "action": "review_reset",
+              "created_at": "2026-10-21T17:35:48+08:00",
+              "reviewer": "浏览器回归教师",
+              "note": "已核对合成示例中的未授课排除与原始失分证据。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "download actions request actual API assets",
+      "passed": true,
+      "ms": 522
+    },
+    {
+      "name": "CSV and both configs upload through real form",
+      "passed": true,
+      "ms": 347,
+      "evidence": {
+        "class_name": "浏览器上传回归班 5345312",
+        "filtered_reports": 1,
+        "configs": [
+          "syllabus.json",
+          "rubric.json"
+        ]
+      }
+    },
+    {
+      "name": "invalid CSV upload displays server validation",
+      "passed": true,
+      "ms": 432
+    },
+    {
+      "name": "390px navigation and all views stay in viewport",
+      "passed": true,
+      "ms": 1758
+    },
+    {
+      "name": "authenticated service prompts then uses token for all downloads",
+      "passed": true,
+      "ms": 1375,
+      "evidence": {
+        "downloads": [
+          {
+            "url": "http://127.0.0.1:8005/api/diagnostics/reports/report_dc9ff69f2bac/export",
+            "authenticated": true
+          },
+          {
+            "url": "http://127.0.0.1:8005/api/diagnostics/sample?kind=syllabus",
+            "authenticated": true
+          }
+        ],
+        "cached_grades_cleared": true,
+        "token_in_url": false
+      }
+    },
+    {
+      "name": "no browser JavaScript errors",
+      "passed": true,
+      "ms": 1
+    }
+  ],
+  "screenshots": [
+    "01_桌面_初始空态.png",
+    "02_桌面_班级报告.png",
+    "04_桌面_学生证据与练习.png",
+    "03_桌面_学生列表.png",
+    "05_桌面_人工复核.png",
+    "06_桌面_导入与校验.png",
+    "07_手机_班级报告.png",
+    "08_手机_学生列表.png",
+    "11_手机_导入与校验.png",
+    "12_手机_历史报告.png",
+    "09_手机_学生证据与练习.png",
+    "10_手机_人工复核.png"
+  ],
+  "console_errors": [],
+  "failed_requests": [
+    {
+      "url": "http://127.0.0.1:8004/api/diagnostics/upload",
+      "status": 400,
+      "expected": true,
+      "reason": "Intentional invalid CSV missing required headers; UI error text asserted in negative test."
+    }
+  ],
+  "layouts": [
+    {
+      "name": "desktop empty",
+      "viewport": 1440,
+      "width": 1440,
+      "nav": [
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        }
+      ]
+    },
+    {
+      "name": "desktop overview",
+      "viewport": 1440,
+      "width": 1440,
+      "nav": [
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        },
+        {
+          "x": 16,
+          "right": 188,
+          "width": 172,
+          "height": 42
+        }
+      ]
+    },
+    {
+      "name": "mobile overview",
+      "viewport": 390,
+      "width": 390,
+      "nav": [
+        {
+          "x": 12,
+          "right": 100.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 104.5,
+          "right": 193,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 197,
+          "right": 285.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 289.5,
+          "right": 378,
+          "width": 88.5,
+          "height": 57
+        }
+      ]
+    },
+    {
+      "name": "mobile students",
+      "viewport": 390,
+      "width": 390,
+      "nav": [
+        {
+          "x": 12,
+          "right": 100.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 104.5,
+          "right": 193,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 197,
+          "right": 285.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 289.5,
+          "right": 378,
+          "width": 88.5,
+          "height": 57
+        }
+      ]
+    },
+    {
+      "name": "mobile import",
+      "viewport": 390,
+      "width": 390,
+      "nav": [
+        {
+          "x": 12,
+          "right": 100.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 104.5,
+          "right": 193,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 197,
+          "right": 285.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 289.5,
+          "right": 378,
+          "width": 88.5,
+          "height": 57
+        }
+      ]
+    },
+    {
+      "name": "mobile history",
+      "viewport": 390,
+      "width": 390,
+      "nav": [
+        {
+          "x": 12,
+          "right": 100.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 104.5,
+          "right": 193,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 197,
+          "right": 285.5,
+          "width": 88.5,
+          "height": 57
+        },
+        {
+          "x": 289.5,
+          "right": 378,
+          "width": 88.5,
+          "height": 57
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finished_at": "2026-10-21T09:35:52.769Z",
+  "screenshot_path_base": "project_root"
+}

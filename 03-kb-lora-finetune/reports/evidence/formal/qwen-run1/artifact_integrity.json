@@ -1,0 +1,66 @@
+{
+  "actual_run_config.json": {
+    "bytes": 323,
+    "sha256": "63ebaa406cd2e97c7578738a19ae261e3576bb4ae662e87916f83340f2c6c1e6"
+  },
+  "adapter.jsonl": {
+    "bytes": 3732,
+    "sha256": "88be4c590d26d51dfe2f08e82c6c5085c81c4b7647bc9f9022d1d58d2b81b84b"
+  },
+  "adapter.manifest.json": {
+    "bytes": 422,
+    "sha256": "d5e4a03ef8c7f31656fa8f3da656daa626afb86e089c97d4fad12a6e246266a9"
+  },
+  "adapter_config.json": {
+    "bytes": 1101,
+    "sha256": "64a66ea278ee6077f3b4ffc127c345ef5362dc335fea79393a13a3aab7cdf0a4"
+  },
+  "adapter_model.safetensors": {
+    "bytes": 17640136,
+    "sha256": "9ecfcc6eb498713041cbb89e2955416946db7ae9e08124786e92f4020eab9d83"
+  },
+  "added_tokens.json": {
+    "bytes": 629,
+    "sha256": "f0acedf99e19ec0a5b797ffbd0b94328172ccd90f7f385bbc521cda2701b03ab"
+  },
+  "baseline.jsonl": {
+    "bytes": 4715,
+    "sha256": "0cae7bf85b71c5d353ebc89f57f40b4fafda8f43d2a3b44da0c705ca013fbac2"
+  },
+  "baseline.manifest.json": {
+    "bytes": 400,
+    "sha256": "12de7e1583155ef00bad6dae8599e93f4da654f406062ddf80bbfde890a5f69d"
+  },
+  "baseline_reuse.json": {
+    "bytes": 306,
+    "sha256": "4d716b7c43aebcf1b2691ef67967626aac1b03eaf8190fb7fb575247009e17f2"
+  },
+  "evaluation.json": {
+    "bytes": 13277,
+    "sha256": "9202ad3fb98d712aa68ba3685f95b121ac1dc78fa1697297b1ac6352d88fd167"
+  },
+  "special_tokens_map.json": {
+    "bytes": 644,
+    "sha256": "57255613bbe23c9497211ca68561ff429a51e871dbaf5a59998fa4c8f7fe168a"
+  },
+  "tokenizer.json": {
+    "bytes": 11421896,
+    "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+  },
+  "tokenizer_config.json": {
+    "bytes": 4893,
+    "sha256": "5fd4cea2574beb6b70ba31582179880d331b723f5b5119ee67c29d45b983f7be"
+  },
+  "training_log.jsonl": {
+    "bytes": 5925,
+    "sha256": "842d0c077a1874292024b992e07cdee34bd7679d00e91fd0947fbe9e888358fc"
+  },
+  "training_manifest.json": {
+    "bytes": 1492,
+    "sha256": "3e2ed83b6812667db15e84391a2dd87495fcd416020c796b06208bd306efc019"
+  },
+  "vocab.json": {
+    "bytes": 2776833,
+    "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  }
+}

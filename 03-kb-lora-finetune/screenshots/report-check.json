@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-10-21T09:48:55.521Z",
+  "url": "http://127.0.0.1:8003/reports/training-report.html",
+  "passed": true,
+  "checks": [
+    {
+      "title": "EduForge · LoRA 运行证据",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "imagesLoaded": true,
+      "screenshot": "../模型微调_桌面测试截图.png"
+    },
+    {
+      "title": "EduForge · LoRA 运行证据",
+      "width": 390,
+      "scrollWidth": 390,
+      "imagesLoaded": true,
+      "screenshot": "../模型微调_手机测试截图.png"
+    }
+  ],
+  "image_paths_updated": true,
+  "image_content_unchanged": true
+}

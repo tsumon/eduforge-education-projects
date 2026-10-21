@@ -1,0 +1,17 @@
+{
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "executable": "<LOCAL_PYTHON_PATH_REDACTED>",
+  "platform": "Windows (host build redacted)",
+  "versions": {
+    "torch": "2.14.1+cpu",
+    "transformers": "4.57.6",
+    "peft": "0.18.1",
+    "accelerate": "1.15.0",
+    "tokenizers": "0.22.2",
+    "safetensors": "0.8.0"
+  },
+  "cuda_available": false,
+  "cuda_devices": [],
+  "training_dependencies_ready": true,
+  "public_copy_note": "Local executable path, host build and free disk information removed; training dependency versions preserved."
+}

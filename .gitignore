@@ -1,0 +1,52 @@
+# Dependencies and local tools
+.venv/
+venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.uv-cache/
+.model-cache/
+.taste-skill/
+.agents/
+.claude/
+.codex/
+
+# Local data and credentials
+**/runtime*/
+**/dist/
+.env
+.env.*
+!.env.example
+!.env.sample
+*.sqlite*
+*.db
+*.db-*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+credentials.json
+secrets.json
+*.local.json
+
+# Model/data artifacts are intentionally omitted from the public edition
+03-kb-lora-finetune/data/
+**/outputs/
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.gguf
+
+# Personal submission packages and workstation files
+*.zip
+*.7z
+*.tar.gz
+.DS_Store
+Thumbs.db
+desktop.ini
+*.pyc
+*.pyo

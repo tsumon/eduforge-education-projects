@@ -1,0 +1,4 @@
+# Preserve historical evidence, canonical third-party licenses and sample input bytes.
+03-kb-lora-finetune/reports/evidence/** -text -whitespace
+**/static/fonts/LICENSE -text -whitespace
+02-learning-diagnostics/data/samples/classroom.csv -text -whitespace

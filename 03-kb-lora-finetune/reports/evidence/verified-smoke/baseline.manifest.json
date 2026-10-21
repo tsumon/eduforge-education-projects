@@ -1,0 +1,13 @@
+{
+  "model": "hf-internal-testing/tiny-random-LlamaForCausalLM",
+  "adapter": null,
+  "revision": "9fb191250dd56d0ba7ec9785a025ed29c03d5998",
+  "dataset_sha256": "c8087dc9e8f18acf8263a6e4decc02a819ae276e882c7046123fc7a29a922007",
+  "examples": 14,
+  "max_new_tokens": 64,
+  "decoding": "greedy",
+  "seed": 42,
+  "elapsed_seconds": 0.758,
+  "purpose": "baseline",
+  "references_used_for_generation": false
+}

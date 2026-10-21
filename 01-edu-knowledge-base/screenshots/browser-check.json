@@ -1,0 +1,411 @@
+{
+  "startedAt": "2026-10-21T09:10:52.983Z",
+  "baseUrl": "http://127.0.0.1:8001",
+  "checks": [
+    {
+      "name": "isolated review data is ready",
+      "passed": true,
+      "ms": 24,
+      "detail": {
+        "documents": 7,
+        "dataDir": "runtime-review"
+      }
+    },
+    {
+      "name": "keyboard newline and Enter submit",
+      "passed": true,
+      "ms": 316,
+      "detail": {
+        "recordId": "qa_64ed5518c3aa",
+        "mode": "extractive",
+        "citations": 1
+      }
+    },
+    {
+      "name": "citation link preserves answer and route",
+      "passed": true,
+      "ms": 169
+    },
+    {
+      "name": "answer feedback is persisted and can be changed",
+      "passed": true,
+      "ms": 219
+    },
+    {
+      "name": "Markdown export link resolves to this answer",
+      "passed": true,
+      "ms": 4
+    },
+    {
+      "name": "desktop answer layout",
+      "passed": true,
+      "ms": 252
+    },
+    {
+      "name": "mobile answer and citations",
+      "passed": true,
+      "ms": 256
+    },
+    {
+      "name": "unsupported question refuses without fabricated citations",
+      "passed": true,
+      "ms": 128,
+      "detail": {
+        "recordId": "qa_a36092e1571f"
+      }
+    },
+    {
+      "name": "keyboard tab navigation",
+      "passed": true,
+      "ms": 227
+    },
+    {
+      "name": "document dialog keyboard and validation",
+      "passed": true,
+      "ms": 159
+    },
+    {
+      "name": "new text is saved and searchable",
+      "passed": true,
+      "ms": 850
+    },
+    {
+      "name": "document detail drawer contains the saved source",
+      "passed": true,
+      "ms": 2765
+    },
+    {
+      "name": "document layouts",
+      "passed": true,
+      "ms": 503
+    },
+    {
+      "name": "history searches and refused filters",
+      "passed": true,
+      "ms": 1114
+    },
+    {
+      "name": "JSONL export link contains both real records",
+      "passed": true,
+      "ms": 3,
+      "detail": {
+        "records": 18
+      }
+    },
+    {
+      "name": "settings token save and layouts",
+      "passed": true,
+      "ms": 4038
+    },
+    {
+      "name": "browser has no uncaught JavaScript or API errors",
+      "passed": true,
+      "ms": 0,
+      "detail": {
+        "askRequests": 2,
+        "javascriptErrors": 0,
+        "apiErrors": 0
+      }
+    }
+  ],
+  "screenshots": [
+    "01_桌面_知识问答.png",
+    "02_手机_知识问答.png",
+    "05_桌面_资料详情.png",
+    "03_桌面_资料管理.png",
+    "04_手机_资料管理.png",
+    "06_桌面_问答记录.png",
+    "07_手机_问答记录.png",
+    "08_桌面_系统设置.png",
+    "09_手机_系统设置.png"
+  ],
+  "layouts": [
+    {
+      "name": "ask-desktop",
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "docs",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "history",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "settings",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        }
+      ]
+    },
+    {
+      "name": "ask-mobile",
+      "viewport": 390,
+      "pageWidth": 390,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 25.75,
+          "right": 89.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "docs",
+          "x": 117.25,
+          "right": 181.25,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "history",
+          "x": 208.75,
+          "right": 272.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "settings",
+          "x": 300.25,
+          "right": 364.25,
+          "width": 64,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "name": "docs-desktop",
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "docs",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "history",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "settings",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        }
+      ]
+    },
+    {
+      "name": "docs-mobile",
+      "viewport": 390,
+      "pageWidth": 390,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 25.75,
+          "right": 89.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "docs",
+          "x": 117.25,
+          "right": 181.25,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "history",
+          "x": 208.75,
+          "right": 272.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "settings",
+          "x": 300.25,
+          "right": 364.25,
+          "width": 64,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "name": "history-desktop",
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "docs",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "history",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "settings",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        }
+      ]
+    },
+    {
+      "name": "history-mobile",
+      "viewport": 390,
+      "pageWidth": 390,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 25.75,
+          "right": 89.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "docs",
+          "x": 117.25,
+          "right": 181.25,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "history",
+          "x": 208.75,
+          "right": 272.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "settings",
+          "x": 300.25,
+          "right": 364.25,
+          "width": 64,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "name": "settings-desktop",
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "docs",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "history",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        },
+        {
+          "view": "settings",
+          "x": 8.5,
+          "right": 46.5,
+          "width": 38,
+          "height": 38
+        }
+      ]
+    },
+    {
+      "name": "settings-mobile",
+      "viewport": 390,
+      "pageWidth": 390,
+      "nav": [
+        {
+          "view": "ask",
+          "x": 25.75,
+          "right": 89.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "docs",
+          "x": 117.25,
+          "right": 181.25,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "history",
+          "x": 208.75,
+          "right": 272.75,
+          "width": 64,
+          "height": 52
+        },
+        {
+          "view": "settings",
+          "x": 300.25,
+          "right": 364.25,
+          "width": 64,
+          "height": 52
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "cleanup": {
+    "removedTemporaryDocuments": 1
+  },
+  "finishedAt": "2026-10-21T09:11:05.478Z",
+  "passed": true,
+  "screenshotDirectory": "."
+}

@@ -1,0 +1,7 @@
+# CPU PyTorch: install torch separately from the official CPU index if desired.
+torch>=2.5,<3
+transformers>=4.57.6,<5
+peft>=0.17,<0.19
+accelerate>=1.2,<2
+numpy>=1.26,<3
+safetensors>=0.4

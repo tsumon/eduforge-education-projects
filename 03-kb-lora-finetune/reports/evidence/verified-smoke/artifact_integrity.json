@@ -1,0 +1,50 @@
+{
+  "adapter/adapter_config.json": {
+    "bytes": 1547,
+    "sha256": "1b2ec66cfc3548e8724e62bf813d3d982c089ac13d63b2518d8deca40d8ca94f"
+  },
+  "adapter/adapter_model.safetensors": {
+    "bytes": 15232,
+    "sha256": "fdfb47e8f23f938d3f4064ce8304c1cf4f971f92a650c05b62d36f16c45198ef"
+  },
+  "adapter/special_tokens_map.json": {
+    "bytes": 582,
+    "sha256": "b305557c9ad739c0d21641cb09874e374f3eff99a3101d715bda1c93b26e763e"
+  },
+  "adapter/tokenizer.json": {
+    "bytes": 3619013,
+    "sha256": "d606f46a8aa6f29f0a0abdec7c3ffddefc9f9bfe26919532d209a0a850e25029"
+  },
+  "adapter/tokenizer_config.json": {
+    "bytes": 939,
+    "sha256": "3a0d8b2e80f11647785e6fb8b7165c43554f91a7434ce6f5bdfa74356446b198"
+  },
+  "adapter/training_log.jsonl": {
+    "bytes": 463,
+    "sha256": "ef2dee5a407ea14de3eb3428b606a74181b72c00a85957ed49df32ee15454fba"
+  },
+  "adapter/training_manifest.json": {
+    "bytes": 1491,
+    "sha256": "b80a4f3d150b6a5fc5f75cfbf036283dfc9040392558a77e078355e3da214209"
+  },
+  "adapter.jsonl": {
+    "bytes": 6805,
+    "sha256": "99c4580e07cdec0c1e33227e9451c3b19194d852ecd6e97c971ce698b8ccf6a6"
+  },
+  "adapter.manifest.json": {
+    "bytes": 447,
+    "sha256": "d9492724214906106faca06633519483079eb497b2fae4de9eb994843822f13a"
+  },
+  "baseline.jsonl": {
+    "bytes": 6939,
+    "sha256": "e44ed70d12294caa3a4430b095d9b61db65465bb97aa5945ed150d06fa9abc3a"
+  },
+  "baseline.manifest.json": {
+    "bytes": 420,
+    "sha256": "537ce8ccf0fdec35280a866f1d0441975d5194ce77368d22076d1ad2285ebec7"
+  },
+  "evaluation.json": {
+    "bytes": 13183,
+    "sha256": "0d5254f9d88e98309f3a8a8a0a8af12a2b561499c865987ded5cc9bbf5d8b291"
+  }
+}

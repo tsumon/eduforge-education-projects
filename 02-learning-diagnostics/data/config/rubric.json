@@ -1,0 +1,19 @@
+{
+  "weights": {
+    "homework": 0.4,
+    "quiz": 0.4,
+    "interaction": 0.2
+  },
+  "thresholds": {
+    "weak": 60,
+    "challenge": 80
+  },
+  "min_records_per_topic": 2,
+  "class_priority": {
+    "high_weak_rate": 0.4,
+    "high_mastery": 60,
+    "medium_weak_rate": 0.2,
+    "medium_mastery": 70
+  },
+  "max_exercises_per_student": 4
+}

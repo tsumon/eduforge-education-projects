@@ -1,0 +1,13 @@
+{
+  "purpose": "smoke",
+  "init_tiny_random": true,
+  "device": "cpu",
+  "max_steps": 8,
+  "max_length": 2048,
+  "batch_size": 1,
+  "gradient_accumulation": 1,
+  "learning_rate": 0.001,
+  "rank": 4,
+  "seed": 42,
+  "output": "outputs/smoke/adapter"
+}

@@ -1,0 +1,5 @@
+{
+  "source": "outputs/qwen-pilot/baseline.jsonl",
+  "sha256": "0cae7bf85b71c5d353ebc89f57f40b4fafda8f43d2a3b44da0c705ca013fbac2",
+  "reason": "Reuse actual unchanged baseline: identical base revision, prompt implementation, test data, greedy decoding, seed and token limit. No predictions edited."
+}

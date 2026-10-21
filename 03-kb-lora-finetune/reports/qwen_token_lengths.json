@@ -1,0 +1,26 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "main",
+  "max_length": 1024,
+  "weights_loaded": false,
+  "splits": {
+    "train": {
+      "examples": 56,
+      "maximum_tokens": 304,
+      "minimum_tokens": 162,
+      "all_fit_without_truncation": true
+    },
+    "dev": {
+      "examples": 14,
+      "maximum_tokens": 294,
+      "minimum_tokens": 164,
+      "all_fit_without_truncation": true
+    },
+    "test": {
+      "examples": 14,
+      "maximum_tokens": 254,
+      "minimum_tokens": 163,
+      "all_fit_without_truncation": true
+    }
+  }
+}

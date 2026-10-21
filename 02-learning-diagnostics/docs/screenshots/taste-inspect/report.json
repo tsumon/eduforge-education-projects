@@ -1,0 +1,1615 @@
+{
+  "url": "http://127.0.0.1:8004",
+  "at": "2026-10-21T09:36:13.440Z",
+  "allow": [],
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "load": "load",
+      "screens": 2,
+      "filled": [
+        0.84,
+        0.89
+      ],
+      "motion": {
+        "elements": 0,
+        "css": 0,
+        "transitions": 0,
+        "scripted": 0,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 1440,
+          "h": 900
+        },
+        "page": {
+          "height": 1636,
+          "screens": 1.8,
+          "words": 208,
+          "img": 0,
+          "video": 0,
+          "canvas": 0,
+          "svg": 5,
+          "sections": 13,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 0,
+          "uiAbuse": false,
+          "realPictures": 0,
+          "videoCount": 0,
+          "uiPictures": 0,
+          "pictureSamples": [],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": [],
+          "videosNoPoster": 0
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 1,
+          "size": 24,
+          "vw": 1.7,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 83,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "h1": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "lines": 1,
+          "size": 24,
+          "font": "Geist"
+        },
+        "headings": [],
+        "headingSummary": {
+          "count": 0,
+          "maxLines": 0,
+          "over2Lines": 0,
+          "statements": 0,
+          "centered": 0,
+          "medianWords": null,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "Geist",
+              "share": 0.71,
+              "mono": false
+            },
+            {
+              "family": "Geist Mono",
+              "share": 0.29,
+              "mono": true
+            }
+          ],
+          "familyCount": 2,
+          "sizes": [
+            12,
+            13,
+            14,
+            16,
+            17,
+            24,
+            27
+          ],
+          "sizeCount": 7,
+          "notLoaded": [],
+          "body": null,
+          "measureChars": null,
+          "max": {
+            "size": 27,
+            "vw": 1.9,
+            "font": "Geist",
+            "text": "8"
+          },
+          "monoShare": 0.29,
+          "monoProseShare": 0,
+          "monoFamilies": [
+            "Geist Mono"
+          ],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0,
+          "centerShare": 0.01,
+          "smallText": 29
+        },
+        "eyebrows": [],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#edf1f5",
+          "bodyBgHsl": {
+            "h": 210,
+            "s": 0.29,
+            "l": 0.95
+          },
+          "dark": false,
+          "sectionBgs": [
+            {
+              "color": "#ffffff",
+              "top": 56,
+              "hsl": {
+                "h": 0,
+                "s": 0,
+                "l": 1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#5c6975",
+              "share": 0.76
+            },
+            {
+              "color": "#414a54",
+              "share": 0.13
+            },
+            {
+              "color": "#20252b",
+              "share": 0.08
+            },
+            {
+              "color": "#8b5a16",
+              "share": 0.02
+            },
+            {
+              "color": "#ffffff",
+              "share": 0
+            }
+          ],
+          "button": {
+            "bg": "#20252b",
+            "hsl": {
+              "h": 213,
+              "s": 0.15,
+              "l": 0.15
+            },
+            "fg": "#20252b"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 5,
+          "inHero": 5,
+          "radius": 6,
+          "height": 36,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": [
+            "跳到主要内容",
+            "班级报告",
+            "导出 Markdown",
+            "导入数据",
+            "人工复核"
+          ]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 10,
+          "hairlineSamples": [
+            "div#kpis.kpi-strip 1178px",
+            "p.panel-note 704px",
+            "article.reteach-item 454px",
+            "article.reteach-item 454px",
+            "article.reteach-item 454px"
+          ],
+          "outlinedBoxes": 6,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 6,
+          "boxRadius": 8,
+          "squareMedia": 0,
+          "roundedMedia": 0,
+          "mediaRadius": 0,
+          "textShadow": 0,
+          "cardRows": [
+            {
+              "count": 4,
+              "iconTopped": false,
+              "rounded": false,
+              "top": 541
+            }
+          ]
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 1,
+          "fixed": true,
+          "height": 900,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": [
+          "geist",
+          "geist mono"
+        ]
+      },
+      "layout": {
+        "viewport": {
+          "w": 1440,
+          "h": 900
+        },
+        "pageH": 1636,
+        "margins": {
+          "left": 229,
+          "right": 33
+        },
+        "sections": [
+          {
+            "sel": "div#kpis.kpi-strip",
+            "tag": "div",
+            "top": 268,
+            "height": 127,
+            "words": 12,
+            "media": 0,
+            "middle": 225,
+            "heading": {
+              "text": "70.2",
+              "size": 27,
+              "tag": "dd"
+            },
+            "left": 229,
+            "right": 225,
+            "textLeft": 229,
+            "textRight": 225,
+            "fullBleed": false,
+            "footer": false,
+            "hero": true,
+            "continues": false,
+            "pinned": false
+          },
+          {
+            "sel": "div.analysis-grid",
+            "tag": "div",
+            "top": 456,
+            "height": 743,
+            "words": 129,
+            "media": 0,
+            "middle": 99,
+            "heading": {
+              "text": "知识点掌握情况",
+              "size": 16,
+              "tag": "h2"
+            },
+            "left": 250,
+            "right": 54,
+            "textLeft": 250,
+            "textRight": 54,
+            "fullBleed": false,
+            "footer": false,
+            "hero": false,
+            "continues": false,
+            "pinned": false
+          },
+          {
+            "sel": "div.below-grid",
+            "tag": "div",
+            "top": 1215,
+            "height": 268,
+            "words": 16,
+            "media": 0,
+            "middle": 194,
+            "heading": {
+              "text": "数据质量与范围",
+              "size": 16,
+              "tag": "h2"
+            },
+            "left": 250,
+            "right": 54,
+            "textLeft": 250,
+            "textRight": 54,
+            "fullBleed": false,
+            "footer": true,
+            "hero": false,
+            "continues": false,
+            "pinned": false
+          }
+        ],
+        "gaps": [],
+        "h1s": [
+          {
+            "text": "浏览器上传回归班 5345312",
+            "size": 24,
+            "top": 83,
+            "firstScreen": true
+          }
+        ],
+        "edgeText": [],
+        "edges": [
+          {
+            "x": 972,
+            "n": 6
+          },
+          {
+            "x": 250,
+            "n": 2
+          },
+          {
+            "x": 229,
+            "n": 1
+          }
+        ],
+        "leftBlocks": 9,
+        "bodySize": 12,
+        "stage": false,
+        "explains": false,
+        "slivers": [],
+        "voidShare": 0.07,
+        "voidBox": {
+          "x": 0,
+          "y": 300,
+          "w": 180,
+          "h": 480
+        }
+      },
+      "app": {
+        "viewport": {
+          "w": 1440,
+          "h": 900
+        },
+        "dark": false,
+        "ground": "#edf1f5",
+        "sidebar": {
+          "w": 204,
+          "tag": "aside",
+          "links": 5,
+          "share": 0.14
+        },
+        "topbar": {
+          "h": 56
+        },
+        "canvas": {
+          "left": 25,
+          "right": 33
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 1,
+          "size": 24,
+          "vw": 1.7,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 83,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "charts": 1,
+        "layout": {
+          "panels": 1,
+          "firstScreen": 1,
+          "ragged": [],
+          "voids": []
+        },
+        "tiles": 0,
+        "panels": {
+          "count": 10,
+          "radii": [
+            [
+              0,
+              5
+            ],
+            [
+              8,
+              4
+            ],
+            [
+              16,
+              1
+            ]
+          ],
+          "heavyBorders": 0,
+          "borderSamples": [],
+          "heavyShadows": 0,
+          "softShadows": 0,
+          "shadowSamples": [],
+          "glass": 0
+        },
+        "chips": {
+          "count": 0,
+          "hues": 0,
+          "samples": []
+        },
+        "numbers": {
+          "cells": 40,
+          "leftAligned": 0,
+          "figures": 4,
+          "tabularShare": 1,
+          "kpiMax": 14
+        },
+        "rows": {
+          "count": 6,
+          "median": 71
+        },
+        "chartHues": 0,
+        "placeholders": [],
+        "type": {
+          "under13": 0.67,
+          "tiny": 0,
+          "tinySamples": [],
+          "sizes": [
+            12,
+            13,
+            14,
+            16,
+            17,
+            20,
+            22,
+            24,
+            27
+          ]
+        },
+        "title": {
+          "text": "浏览器上传回归班 5345312",
+          "size": 24,
+          "top": 83
+        },
+        "colourShare": 0
+      },
+      "consoleErrors": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "load": "load",
+      "screens": 3,
+      "filled": [
+        0.78,
+        0.83,
+        0.83
+      ],
+      "motion": {
+        "elements": 0,
+        "css": 0,
+        "transitions": 0,
+        "scripted": 0,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 768,
+          "h": 1024
+        },
+        "page": {
+          "height": 2304,
+          "screens": 2.3,
+          "words": 208,
+          "img": 0,
+          "video": 0,
+          "canvas": 0,
+          "svg": 5,
+          "sections": 13,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 0,
+          "uiAbuse": false,
+          "realPictures": 0,
+          "videoCount": 0,
+          "uiPictures": 0,
+          "pictureSamples": [],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": [],
+          "videosNoPoster": 0
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 1,
+          "size": 24,
+          "vw": 3.1,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 81,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "h1": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "lines": 1,
+          "size": 24,
+          "font": "Geist"
+        },
+        "headings": [],
+        "headingSummary": {
+          "count": 0,
+          "maxLines": 0,
+          "over2Lines": 0,
+          "statements": 0,
+          "centered": 0,
+          "medianWords": null,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "Geist",
+              "share": 0.71,
+              "mono": false
+            },
+            {
+              "family": "Geist Mono",
+              "share": 0.29,
+              "mono": true
+            }
+          ],
+          "familyCount": 2,
+          "sizes": [
+            12,
+            13,
+            14,
+            16,
+            24
+          ],
+          "sizeCount": 5,
+          "notLoaded": [],
+          "body": null,
+          "measureChars": null,
+          "max": {
+            "size": 24,
+            "vw": 3.1,
+            "font": "Geist",
+            "text": "浏览器上传回归班 5345312"
+          },
+          "monoShare": 0.29,
+          "monoProseShare": 0,
+          "monoFamilies": [
+            "Geist Mono"
+          ],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0,
+          "centerShare": 0.01,
+          "smallText": 29
+        },
+        "eyebrows": [],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#edf1f5",
+          "bodyBgHsl": {
+            "h": 210,
+            "s": 0.29,
+            "l": 0.95
+          },
+          "dark": false,
+          "sectionBgs": [
+            {
+              "color": "#ffffff",
+              "top": 56,
+              "hsl": {
+                "h": 0,
+                "s": 0,
+                "l": 1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#5c6975",
+              "share": 0.76
+            },
+            {
+              "color": "#414a54",
+              "share": 0.13
+            },
+            {
+              "color": "#20252b",
+              "share": 0.08
+            },
+            {
+              "color": "#8b5a16",
+              "share": 0.02
+            },
+            {
+              "color": "#ffffff",
+              "share": 0
+            }
+          ],
+          "button": {
+            "bg": "#20252b",
+            "hsl": {
+              "h": 213,
+              "s": 0.15,
+              "l": 0.15
+            },
+            "fg": "#20252b"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 5,
+          "inHero": 5,
+          "radius": 6,
+          "height": 36,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": [
+            "跳到主要内容",
+            "班级报告",
+            "导出 Markdown",
+            "导入数据",
+            "人工复核"
+          ]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 10,
+          "hairlineSamples": [
+            "div#kpis.kpi-strip 542px",
+            "p.panel-note 540px",
+            "article.reteach-item 270px",
+            "article.reteach-item 270px",
+            "article.reteach-item 270px"
+          ],
+          "outlinedBoxes": 6,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 6,
+          "boxRadius": 8,
+          "squareMedia": 0,
+          "roundedMedia": 0,
+          "mediaRadius": 0,
+          "textShadow": 0,
+          "cardRows": [
+            {
+              "count": 4,
+              "iconTopped": false,
+              "rounded": false,
+              "top": 1172
+            }
+          ]
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 1,
+          "fixed": true,
+          "height": 1024,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": [
+          "geist",
+          "geist mono"
+        ]
+      },
+      "layout": {
+        "viewport": {
+          "w": 768,
+          "h": 1024
+        },
+        "pageH": 2304,
+        "margins": {
+          "left": 197,
+          "right": 32
+        },
+        "sections": [
+          {
+            "sel": "div#kpis.kpi-strip",
+            "tag": "div",
+            "top": 269,
+            "height": 143,
+            "words": 12,
+            "media": 0,
+            "middle": 58,
+            "heading": {
+              "text": "70.2",
+              "size": 24,
+              "tag": "dd"
+            },
+            "left": 197,
+            "right": 70,
+            "textLeft": 197,
+            "textRight": 70,
+            "fullBleed": false,
+            "footer": false,
+            "hero": true,
+            "continues": false,
+            "pinned": false
+          },
+          {
+            "sel": "div.analysis-grid",
+            "tag": "div",
+            "top": 473,
+            "height": 1142,
+            "words": 129,
+            "media": 0,
+            "middle": 0,
+            "heading": {
+              "text": "知识点掌握情况",
+              "size": 16,
+              "tag": "h2"
+            },
+            "left": 212,
+            "right": 50,
+            "textLeft": 212,
+            "textRight": 50,
+            "fullBleed": false,
+            "footer": false,
+            "hero": true,
+            "continues": false,
+            "pinned": false
+          },
+          {
+            "sel": "div.below-grid",
+            "tag": "div",
+            "top": 1631,
+            "height": 519,
+            "words": 16,
+            "media": 0,
+            "middle": 0,
+            "heading": {
+              "text": "数据质量与范围",
+              "size": 16,
+              "tag": "h2"
+            },
+            "left": 218,
+            "right": 50,
+            "textLeft": 218,
+            "textRight": 50,
+            "fullBleed": false,
+            "footer": true,
+            "hero": false,
+            "continues": false,
+            "pinned": false
+          }
+        ],
+        "gaps": [],
+        "h1s": [
+          {
+            "text": "浏览器上传回归班 5345312",
+            "size": 24,
+            "top": 81,
+            "firstScreen": true
+          }
+        ],
+        "edgeText": [],
+        "edges": [
+          {
+            "x": 218,
+            "n": 6
+          },
+          {
+            "x": 489,
+            "n": 2
+          },
+          {
+            "x": 197,
+            "n": 1
+          }
+        ],
+        "leftBlocks": 9,
+        "bodySize": 12,
+        "stage": false,
+        "explains": false,
+        "slivers": [],
+        "voidShare": 0,
+        "voidBox": null
+      },
+      "app": {
+        "viewport": {
+          "w": 768,
+          "h": 1024
+        },
+        "dark": false,
+        "ground": "#edf1f5",
+        "sidebar": {
+          "w": 176,
+          "tag": "aside",
+          "links": 5,
+          "share": 0.23
+        },
+        "topbar": {
+          "h": 56
+        },
+        "canvas": {
+          "left": 21,
+          "right": 30
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 1,
+          "size": 24,
+          "vw": 3.1,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 81,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "charts": 1,
+        "layout": {
+          "panels": 1,
+          "firstScreen": 1,
+          "ragged": [],
+          "voids": []
+        },
+        "tiles": 0,
+        "panels": {
+          "count": 10,
+          "radii": [
+            [
+              0,
+              5
+            ],
+            [
+              8,
+              4
+            ],
+            [
+              16,
+              1
+            ]
+          ],
+          "heavyBorders": 0,
+          "borderSamples": [],
+          "heavyShadows": 0,
+          "softShadows": 0,
+          "shadowSamples": [],
+          "glass": 0
+        },
+        "chips": {
+          "count": 0,
+          "hues": 0,
+          "samples": []
+        },
+        "numbers": {
+          "cells": 40,
+          "leftAligned": 0,
+          "figures": 4,
+          "tabularShare": 1,
+          "kpiMax": 14
+        },
+        "rows": {
+          "count": 6,
+          "median": 72
+        },
+        "chartHues": 0,
+        "placeholders": [],
+        "type": {
+          "under13": 0.68,
+          "tiny": 0,
+          "tinySamples": [],
+          "sizes": [
+            12,
+            13,
+            14,
+            16,
+            20,
+            22,
+            24
+          ]
+        },
+        "title": {
+          "text": "浏览器上传回归班 5345312",
+          "size": 24,
+          "top": 81
+        },
+        "colourShare": 0.001
+      },
+      "consoleErrors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "load": "load",
+      "screens": 4,
+      "filled": [
+        0.97,
+        0.99,
+        1,
+        1
+      ],
+      "motion": {
+        "elements": 0,
+        "css": 0,
+        "transitions": 0,
+        "scripted": 0,
+        "videos": 0,
+        "playingVideos": 0
+      },
+      "metrics": {
+        "viewport": {
+          "w": 390,
+          "h": 844
+        },
+        "page": {
+          "height": 2844,
+          "screens": 3.4,
+          "words": 201,
+          "img": 0,
+          "video": 0,
+          "canvas": 0,
+          "svg": 5,
+          "sections": 13,
+          "horizontalOverflow": 0,
+          "overflowCulprits": [],
+          "uiFragments": 0,
+          "uiAbuse": false,
+          "realPictures": 0,
+          "videoCount": 0,
+          "uiPictures": 0,
+          "pictureSamples": [],
+          "blendText": 0,
+          "sideScrollers": 0,
+          "brokenImages": [],
+          "emoji": [],
+          "videosNoPoster": 0
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 2,
+          "size": 22,
+          "vw": 5.6,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 74,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "h1": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "lines": 2,
+          "size": 22,
+          "font": "Geist"
+        },
+        "headings": [
+          {
+            "text": "浏览器上传回归班 5345312",
+            "words": 2,
+            "chars": 16,
+            "lines": 2,
+            "size": 22,
+            "vw": 5.6,
+            "font": "Geist",
+            "weight": 600,
+            "tracking": -0.025,
+            "leading": 1.4,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.61,
+            "top": 74,
+            "tag": "h1",
+            "kind": "heading"
+          },
+          {
+            "text": "8人",
+            "words": 1,
+            "chars": 2,
+            "lines": 1,
+            "size": 24,
+            "vw": 6.2,
+            "font": "Geist",
+            "weight": 400,
+            "tracking": 0,
+            "leading": 1.4,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.45,
+            "top": 371,
+            "tag": "dd",
+            "kind": "statement"
+          },
+          {
+            "text": "70.2分",
+            "words": 1,
+            "chars": 5,
+            "lines": 1,
+            "size": 24,
+            "vw": 6.2,
+            "font": "Geist",
+            "weight": 400,
+            "tracking": 0,
+            "leading": 1.4,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "right",
+            "widthRatio": 0.4,
+            "top": 371,
+            "tag": "dd",
+            "kind": "heading"
+          },
+          {
+            "text": "2人",
+            "words": 1,
+            "chars": 2,
+            "lines": 1,
+            "size": 24,
+            "vw": 6.2,
+            "font": "Geist",
+            "weight": 400,
+            "tracking": 0,
+            "leading": 1.4,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "left",
+            "widthRatio": 0.45,
+            "top": 485,
+            "tag": "dd",
+            "kind": "statement"
+          },
+          {
+            "text": "98条",
+            "words": 1,
+            "chars": 3,
+            "lines": 1,
+            "size": 24,
+            "vw": 6.2,
+            "font": "Geist",
+            "weight": 400,
+            "tracking": 0,
+            "leading": 1.4,
+            "upper": false,
+            "italic": false,
+            "mono": false,
+            "align": "left",
+            "position": "right",
+            "widthRatio": 0.4,
+            "top": 485,
+            "tag": "dd",
+            "kind": "statement"
+          }
+        ],
+        "headingSummary": {
+          "count": 5,
+          "maxLines": 2,
+          "over2Lines": 0,
+          "statements": 3,
+          "centered": 0,
+          "medianWords": 1,
+          "mixedFontHeadings": 0
+        },
+        "type": {
+          "families": [
+            {
+              "family": "Geist",
+              "share": 0.7,
+              "mono": false
+            },
+            {
+              "family": "Geist Mono",
+              "share": 0.3,
+              "mono": true
+            }
+          ],
+          "familyCount": 2,
+          "sizes": [
+            11,
+            12,
+            13,
+            14,
+            22,
+            24
+          ],
+          "sizeCount": 6,
+          "notLoaded": [],
+          "body": null,
+          "measureChars": null,
+          "max": {
+            "size": 24,
+            "vw": 6.2,
+            "font": "Geist",
+            "text": "8"
+          },
+          "monoShare": 0.3,
+          "monoProseShare": 0,
+          "monoFamilies": [
+            "Geist Mono"
+          ],
+          "monoSamples": [],
+          "microLabels": 0,
+          "microLabelShare": 0,
+          "microSamples": [],
+          "upperShare": 0,
+          "centerShare": 0.01,
+          "smallText": 29
+        },
+        "eyebrows": [
+          {
+            "text": "参与学生",
+            "above": "8人",
+            "upper": false,
+            "tracked": false,
+            "mono": false,
+            "pill": false,
+            "size": 12,
+            "top": 345
+          },
+          {
+            "text": "平均掌握度",
+            "above": "70.2分",
+            "upper": false,
+            "tracked": false,
+            "mono": false,
+            "pill": false,
+            "size": 12,
+            "top": 345
+          },
+          {
+            "text": "需要基础巩固",
+            "above": "2人",
+            "upper": false,
+            "tracked": false,
+            "mono": false,
+            "pill": false,
+            "size": 12,
+            "top": 460
+          },
+          {
+            "text": "有效考核记录",
+            "above": "98条",
+            "upper": false,
+            "tracked": false,
+            "mono": false,
+            "pill": false,
+            "size": 12,
+            "top": 460
+          }
+        ],
+        "numbered": [],
+        "color": {
+          "bodyBg": "#edf1f5",
+          "bodyBgHsl": {
+            "h": 210,
+            "s": 0.29,
+            "l": 0.95
+          },
+          "dark": false,
+          "sectionBgs": [
+            {
+              "color": "#ffffff",
+              "top": 52,
+              "hsl": {
+                "h": 0,
+                "s": 0,
+                "l": 1
+              }
+            }
+          ],
+          "textColors": [
+            {
+              "color": "#5c6975",
+              "share": 0.75
+            },
+            {
+              "color": "#414a54",
+              "share": 0.13
+            },
+            {
+              "color": "#20252b",
+              "share": 0.09
+            },
+            {
+              "color": "#8b5a16",
+              "share": 0.02
+            },
+            {
+              "color": "#ffffff",
+              "share": 0
+            }
+          ],
+          "button": {
+            "bg": "#20252b",
+            "hsl": {
+              "h": 213,
+              "s": 0.15,
+              "l": 0.15
+            },
+            "fg": "#20252b"
+          },
+          "lowContrast": []
+        },
+        "buttons": {
+          "count": 5,
+          "inHero": 5,
+          "radius": 6,
+          "height": 44,
+          "withShadow": 0,
+          "withGradient": 0,
+          "mono": 0,
+          "upper": 0,
+          "heroLabels": [
+            "跳到主要内容",
+            "班级报告",
+            "导出 Markdown",
+            "导入数据",
+            "人工复核"
+          ]
+        },
+        "surfaces": {
+          "shadowStatic": 0,
+          "shadowOverlay": 0,
+          "shadowSamples": [],
+          "gradients": 0,
+          "scrims": 0,
+          "gradientSamples": [],
+          "gradientText": 0,
+          "hairlines": 11,
+          "hairlineSamples": [
+            "aside.rail 390px",
+            "div#kpis.kpi-strip 354px",
+            "p.panel-note 352px",
+            "article.reteach-item 352px",
+            "article.reteach-item 352px"
+          ],
+          "outlinedBoxes": 5,
+          "dashed": 0,
+          "blurred": 0,
+          "roundedBoxes": 5,
+          "boxRadius": 8,
+          "squareMedia": 0,
+          "roundedMedia": 0,
+          "mediaRadius": 0,
+          "textShadow": 0,
+          "cardRows": []
+        },
+        "heroMedia": [],
+        "nav": {
+          "links": 0,
+          "fixed": true,
+          "height": 66,
+          "floatingPill": false,
+          "blur": false
+        },
+        "fontsLoaded": [
+          "geist",
+          "geist mono"
+        ]
+      },
+      "layout": {
+        "viewport": {
+          "w": 390,
+          "h": 844
+        },
+        "pageH": 2844,
+        "margins": {
+          "left": 18,
+          "right": 18
+        },
+        "sections": [
+          {
+            "sel": "div#kpis.kpi-strip",
+            "tag": "div",
+            "top": 328,
+            "height": 229,
+            "words": 12,
+            "media": 0,
+            "middle": 102,
+            "heading": {
+              "text": "70.2",
+              "size": 24,
+              "tag": "dd"
+            },
+            "left": 18,
+            "right": 54,
+            "textLeft": 18,
+            "textRight": 54,
+            "fullBleed": false,
+            "footer": false,
+            "hero": true,
+            "continues": false,
+            "pinned": false
+          },
+          {
+            "sel": "section.panel.topic-panel",
+            "tag": "section",
+            "top": 633,
+            "height": 581,
+            "words": 73,
+            "media": 0,
+            "middle": 0,
+            "heading": {
+              "text": "知识点掌握情况",
+              "size": 14,
+              "tag": "h2"
+            },
+            "left": 29,
+            "right": 28,
+            "textLeft": 29,
+            "textRight": 28,
+            "fullBleed": false,
+            "footer": false,
+            "hero": false,
+            "continues": true,
+            "pinned": false
+          },
+          {
+            "sel": "section.panel.reteach-panel",
+            "tag": "section",
+            "top": 1230,
+            "height": 827,
+            "words": 56,
+            "media": 0,
+            "middle": 0,
+            "heading": {
+              "text": "下次课补讲清单",
+              "size": 14,
+              "tag": "h2"
+            },
+            "left": 35,
+            "right": 35,
+            "textLeft": 35,
+            "textRight": 35,
+            "fullBleed": false,
+            "footer": false,
+            "hero": false,
+            "continues": true,
+            "pinned": false
+          },
+          {
+            "sel": "div.below-grid",
+            "tag": "div",
+            "top": 2073,
+            "height": 545,
+            "words": 16,
+            "media": 0,
+            "middle": 0,
+            "heading": {
+              "text": "数据质量与范围",
+              "size": 14,
+              "tag": "h2"
+            },
+            "left": 35,
+            "right": 35,
+            "textLeft": 35,
+            "textRight": 35,
+            "fullBleed": false,
+            "footer": true,
+            "hero": false,
+            "continues": false,
+            "pinned": false
+          }
+        ],
+        "gaps": [],
+        "h1s": [
+          {
+            "text": "浏览器上传回归班 5345312",
+            "size": 22,
+            "top": 74,
+            "firstScreen": true
+          }
+        ],
+        "edgeText": [],
+        "edges": [
+          {
+            "x": 35,
+            "n": 8
+          },
+          {
+            "x": 18,
+            "n": 1
+          }
+        ],
+        "leftBlocks": 9,
+        "bodySize": 12,
+        "stage": false,
+        "explains": false,
+        "slivers": [],
+        "voidShare": 0,
+        "voidBox": null
+      },
+      "app": {
+        "viewport": {
+          "w": 390,
+          "h": 844
+        },
+        "dark": false,
+        "ground": "#edf1f5",
+        "sidebar": null,
+        "topbar": {
+          "h": 52
+        },
+        "canvas": {
+          "left": 18,
+          "right": 18
+        },
+        "hero": {
+          "text": "浏览器上传回归班 5345312",
+          "words": 2,
+          "chars": 16,
+          "lines": 2,
+          "size": 22,
+          "vw": 5.6,
+          "font": "Geist",
+          "weight": 600,
+          "tracking": -0.02,
+          "leading": 1.4,
+          "top": 74,
+          "tag": "h1",
+          "kind": "heading",
+          "align": "left",
+          "position": "left"
+        },
+        "charts": 1,
+        "layout": {
+          "panels": 6,
+          "firstScreen": 2,
+          "ragged": [],
+          "voids": []
+        },
+        "tiles": 0,
+        "panels": {
+          "count": 12,
+          "radii": [
+            [
+              0,
+              8
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          "heavyBorders": 0,
+          "borderSamples": [],
+          "heavyShadows": 0,
+          "softShadows": 0,
+          "shadowSamples": [],
+          "glass": 0
+        },
+        "chips": {
+          "count": 0,
+          "hues": 0,
+          "samples": []
+        },
+        "numbers": {
+          "cells": 40,
+          "leftAligned": 0,
+          "figures": 4,
+          "tabularShare": 1,
+          "kpiMax": 14
+        },
+        "rows": {
+          "count": 6,
+          "median": 69
+        },
+        "chartHues": 0,
+        "placeholders": [],
+        "type": {
+          "under13": 0.72,
+          "tiny": 0,
+          "tinySamples": [],
+          "sizes": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            18,
+            20,
+            22,
+            24
+          ]
+        },
+        "title": {
+          "text": "浏览器上传回归班 5345312",
+          "size": 22,
+          "top": 74
+        },
+        "colourShare": 0
+      },
+      "consoleErrors": []
+    }
+  ],
+  "findings": [
+    {
+      "level": "WARN",
+      "id": "tiny-text",
+      "width": 1440,
+      "message": "67% of the text is under 13px.",
+      "fix": "Data and labels read at 13–14px; keep 11–12px for sublines and axis ticks.",
+      "alsoAt": [
+        768,
+        390
+      ]
+    },
+    {
+      "level": "WARN",
+      "id": "no-data-hue",
+      "width": 1440,
+      "message": "The screen has a chart but no hue on any of its data (0.0% coloured pixels).",
+      "fix": "Put the style's one chart hue (or the brand's) on the screen's main data element: today's line, the booked bars, the current period, the cover margin. Keep the chrome neutral; the hue still stays under the style's colour budget.",
+      "alsoAt": [
+        768
+      ]
+    }
+  ],
+  "images": [
+    {
+      "viewport": "desktop",
+      "width": 1440,
+      "fold": "13_桌面_设计检查首屏.jpg",
+      "pages": [
+        "14_桌面_设计检查长页.jpg"
+      ],
+      "film": []
+    },
+    {
+      "viewport": "tablet",
+      "width": 768,
+      "fold": "15_平板_设计检查首屏.jpg",
+      "pages": [
+        "16_平板_设计检查长页.jpg"
+      ],
+      "film": []
+    },
+    {
+      "viewport": "mobile",
+      "width": 390,
+      "fold": "17_手机_设计检查首屏.jpg",
+      "pages": [
+        "18_手机_设计检查长页.jpg"
+      ],
+      "film": []
+    }
+  ],
+  "screenshot_path_base": "project_root"
+}
