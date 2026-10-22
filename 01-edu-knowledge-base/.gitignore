@@ -3,7 +3,17 @@ __pycache__/
 .pytest_cache/
 runtime/
 runtime-review/
+runtime*/
+.model-cache/
+.uv-cache/
 .taste-skill/
 dist/
 *.pyc
 .env
+.env.*
+!.env.example
+*.local.json
+*.safetensors
+*.bin
+*.db
+*.sqlite*

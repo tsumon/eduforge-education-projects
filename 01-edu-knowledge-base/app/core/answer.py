@@ -4,7 +4,7 @@
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, replace
 
 from .tokenizer import content_tokens, split_sentences, tokenize
 
@@ -21,6 +21,7 @@ class AnswerPolicy:
     max_citations: int = 3
     max_sentences_per_chunk: int = 2
     min_question_terms: int = 1         # 问题至少要有 1 个内容词
+    semantic_min_score: float = 0.50    # 余弦召回门槛，需按所接 Embedding 模型校准
 
 
 @dataclass
@@ -34,6 +35,8 @@ class Evidence:
     coverage: float
     segment_coverage: float = 1.0
     covered_segments: tuple[int, ...] = ()
+    semantic_score: float | None = None
+    lexical_score: float = 0.0
 
 
 def select_evidence(ranked: list[Evidence], policy: AnswerPolicy) -> tuple[list[Evidence], dict]:
@@ -102,6 +105,32 @@ def pick_sentences(question: str, text: str, limit: int) -> list[str]:
     return [t[3] for t in picked]
 
 
+def select_hybrid_evidence(ranked: list[Evidence], policy: AnswerPolicy) -> tuple[list[Evidence], dict]:
+    """语义模式按余弦阈值门控；BM25 融合分只决定候选次序。"""
+    diag = {"policy": asdict(policy), "candidates": [
+        {"chunk_id": e.chunk_id, "title": e.title, "score": round(e.score, 6),
+         "semantic_score": round(e.semantic_score, 4) if e.semantic_score is not None else None,
+         "lexical_score": round(e.lexical_score, 3), "coverage": round(e.coverage, 3)}
+        for e in ranked[:10]
+    ]}
+    pool = [e for e in ranked if e.semantic_score is not None and e.semantic_score >= policy.semantic_min_score]
+    if not pool:
+        diag["reason"] = "semantic_score_below_threshold" if ranked else "no_candidates"
+        return [], diag
+    lexical = sorted([replace(e, score=e.lexical_score) for e in ranked if e.lexical_score > 0], key=lambda e: -e.score)
+    exact, _ = select_evidence(lexical, policy)
+    by_id = {e.chunk_id: e for e in pool}
+    chosen = [by_id[e.chunk_id] for e in exact if e.chunk_id in by_id]
+    if chosen:
+        diag["evidence_basis"] = "lexical_and_semantic"
+    else:
+        pool.sort(key=lambda e: (-e.semantic_score, -e.score))
+        chosen = [e for e in pool if e.semantic_score >= pool[0].semantic_score - 0.03][:policy.max_citations]
+        diag["evidence_basis"] = "semantic"
+    diag.update(reason="answered", selected=[e.chunk_id for e in chosen], top_semantic_score=round(chosen[0].semantic_score, 4))
+    return chosen, diag
+
+
 def format_source(title: str, heading: str = "") -> str:
     """《标题》·章节；标题自带书名号时不重复加；章节与标题相同则省略。"""
     t = title if title.startswith("《") else f"《{title}》"
@@ -126,7 +155,9 @@ def compose_extractive(question: str, evidence: list[Evidence], policy: AnswerPo
 
 def compose_refusal(question: str, ranked: list[Evidence], diag: dict, policy: AnswerPolicy) -> str:
     reason = diag.get("reason")
-    if reason == "no_candidates" or not ranked:
+    if reason == "semantic_score_below_threshold":
+        detail = f"语义检索没有找到相似度达到 {policy.semantic_min_score:.0%} 门槛的资料片段。"
+    elif reason == "no_candidates" or not ranked:
         detail = "知识库中没有任何分片与问题的关键词匹配。"
     else:
         top = next((e for e in ranked if e.chunk_id == diag.get("reranked_top")), ranked[0])

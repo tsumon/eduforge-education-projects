@@ -4,7 +4,7 @@
 
 | 项目 | 功能 | 入口 |
 |---|---|---|
-| [教育知识库](01-edu-knowledge-base/README.md) | 资料导入、问答与原文引用、资料管理、反馈、历史及导出 | 本机 8001 |
+| [教育知识库](01-edu-knowledge-base/README.md) | Embedding API、Qdrant/BM25 混合检索、回答 API、原文引用、资料管理及历史导出 | 本机 8001 |
 | [学情诊断](02-learning-diagnostics/README.md) | CSV 导入、班级分析、失分证据、分层练习、人工复核与报告导出 | 本机 8002 |
 | [LoRA 微调](03-kb-lora-finetune/README.md) | 训练、推理、独立评分脚本与真实 100 步 Qwen 训练报告 | 离线 HTML 报告 |
 
@@ -15,6 +15,8 @@ Python 3.10+。在仓库根目录打开终端，每个项目单独安装依赖�
 ```powershell
 cd 01-edu-knowledge-base
 python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# 填写 Embedding 和回答 API 配置，参见项目 README
 python run.py
 ```
 
@@ -44,10 +46,12 @@ python run.py
 
 原交付已通过 51 / 26 / 11 项测试，另有 22 个子测试；两个 Web 应用真实浏览器检查为 17 / 11 项。此处保留原始测试结果，公开整理后的复核与敏感信息检查见 [公开前审查记录](SECURITY_REVIEW.md)。
 
+RAG 的 API 改造新增后通过 83 项测试及 4 个子测试，使用本机 HTTP 提供商桩与真实 Qdrant；未调用真实模型 API，也未重跑界面截图，范围见 [API 版验证记录](01-edu-knowledge-base/docs/rag-validation.md)。
+
 32 张截图和训练曲线全部使用中文文件名，并直接放在各项目根目录。截图中的课程材料、学生姓名和成绩均为合成演示数据。字体及许可证保存在各 Web 项目的 `static/fonts/`。
 
 ## 使用范围
 
-两个 Web 应用适合本机教学辅助和受控试用。多人上线前仍需补齐个人账号与数据隔离、备份恢复、服务运维和目标负载验证；规则诊断与模型输出都需要人工核对。当前 RAG 默认使用 BM25 词法检索及原文抽取，模型生成是可选配置；微调模型没有自动接入在线 RAG 服务。
+两个 Web 应用适合本机教学辅助和受控试用。多人上线前仍需补齐个人账号与数据隔离、备份恢复、服务运维和目标负载验证；规则诊断与模型输出都需要人工核对。RAG 使用可配置的 Embedding API、Qdrant 与 BM25 混合检索、兼容回答 API，不下载或加载模型；无 API 时可显式选择词法模式。独立微调实验的模型没有加载到在线 RAG 服务。
 
 发布目录不含实名提交包、聊天附件、运行数据库、`.env`、凭证、依赖目录或模型缓存。报告副本中的本机路径和主机信息已脱敏，训练指标与原始模型预测未改写。

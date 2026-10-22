@@ -6,9 +6,9 @@ if not exist .venv (
   python -m venv .venv || goto :err
 )
 call .venv\Scripts\activate.bat
-python -c "import fastapi, uvicorn, multipart" 2>nul || (
+python -c "import fastapi, uvicorn, multipart, qdrant_client, dotenv" 2>nul || (
   echo 正在安装依赖...
-  pip install -r requirements.txt || goto :err
+  python -m pip install -r requirements.txt || goto :err
 )
 python run.py --load-samples %*
 goto :eof

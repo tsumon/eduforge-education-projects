@@ -104,7 +104,20 @@ def chunk_text(text: str, target: int = 320, max_len: int = 480, overlap_sentenc
             chunks.append(Chunk(ord=len(chunks), text="".join(window), heading=cur_heading))
     flush()
     # 过滤空片并重编号
-    out = [c for c in chunks if c.text]
+    out = []
+    for c in chunks:
+        if not c.text:
+            continue
+        if len(c.text) <= max_len:
+            out.append(c)
+        else:
+            # 无标点/超长单句也受硬上限约束，避免模型只看见开头。
+            overlap = min(64, max_len // 4) if overlap_sentences else 0
+            step = max_len - overlap
+            for start in range(0, len(c.text), step):
+                out.append(Chunk(ord=0, text=c.text[start:start + max_len], heading=c.heading))
+                if start + max_len >= len(c.text):
+                    break
     for i, c in enumerate(out):
         c.ord = i
     return out

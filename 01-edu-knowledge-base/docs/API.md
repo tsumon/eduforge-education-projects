@@ -1,69 +1,48 @@
-# 教育知识库 API
+# API
 
-前缀 `/api/knowledge`。交互式文档：`/api/docs`（Swagger UI）。所有错误以 `{"detail": ...}` 返回。
+基础路径 `/api/knowledge`。配置 `EDU_API_TOKEN` 后，全部请求携带 `Authorization: Bearer <token>`；前端及下载均通过请求头传递令牌。
 
-| 方法 | 路径 | 说明 |
+| 方法 | 路径 | 功能 |
 |---|---|---|
-| GET | `/stats` | 资料/分片/提问/拒答计数、分类分布、LLM 配置、阈值 |
-| GET | `/documents` | `{documents:[{id,title,category,source_name,chunk_count,created_at}], categories:[...]}` |
-| GET | `/documents/{id}` | 资料正文、来源、字符数与完整分片列表 |
-| POST | `/documents` | JSON `{title, content, category}` → 201 文档摘要；正文 < 20 字或分类非法 → 400 |
-| POST | `/import` | multipart `files`（多文件）+ `category`；逐文件返回 `{imported:[], failed:[{file,error}]}`；全部失败 → 400 |
-| DELETE | `/documents/{id}` | 删除文档及其分片；不存在 → 404 |
-| POST | `/ask` | JSON `{question}` → 问答记录（见下） |
-| GET | `/history?limit=20&offset=0&refused=false&q=关键词` | `{history:[记录],total,limit,offset}`，新→旧；`refused` 和 `q` 可省略 |
-| GET | `/history/{id}` | 单条记录 |
-| POST | `/history/{id}/feedback` | JSON `{helpful:boolean,note?:string}`，返回更新后的问答记录 |
-| GET | `/history/export.jsonl` | 导出全部历史；每行一个完整 JSON 问答记录 |
-| GET | `/export/{id}` | Markdown 下载（含引用原文与判定依据） |
-| GET | `/sample` | `{questions:[{question, expect: answer/refuse, topic}]}` |
-| POST | `/sample/load` | 导入内置合成演示资料（幂等） |
+| GET | `/stats` | 资料/问答计数、实际回答模型、语义索引及策略 |
+| POST | `/index/rebuild` | 从 SQLite 重新编码全部分片并对账 Qdrant |
+| GET / POST | `/documents` | 列表 / 新建文本资料 |
+| GET / DELETE | `/documents/{id}` | 资料和分片详情 / 删除并同步索引 |
+| POST | `/import` | multipart `files`，可选 `category`，逐文件返回成功/失败 |
+| POST | `/ask` | `{"question":"Python成绩怎么算？"}` |
+| GET | `/history` | `limit`、`offset`、`refused`、`q` 过滤分页 |
+| GET | `/history/{id}` | 完整回答、引用及当时 diagnostics |
+| POST | `/history/{id}/feedback` | `{"helpful":true,"note":""}` |
+| GET | `/history/export.jsonl` | 全部问答导出，需人工筛选后用于训练 |
+| GET | `/export/{id}` | Markdown 导出 |
+| GET / POST | `/sample` / `/sample/load` | 示例问题 / 导入合成资料 |
 
-## 问答记录
+`/healthz` 返回版本及索引就绪状态，异常为 503；`/api/auth/check` 仅返回是否需要令牌。交互文档 `/api/docs`。
 
-```json
-{
-  "id": "qa_xxx",
-  "question": "作业迟交怎么扣分？",
-  "answer": "根据已导入资料，相关内容如下：\n1. …… [1]（出处：《…》·作业提交规则）\n\n说明：以上回答为检索到的资料原句抽取拼接（模式 extractive）……",
-  "mode": "extractive",
-  "refused": false,
-  "citations": [
-    {"n": 1, "document_id": "doc_xxx", "title": "……", "heading": "作业提交规则",
-     "chunk_id": "chk_xxx", "text": "原文分片", "score": 22.27, "coverage": 0.4, "segment_coverage": 0.5}
-  ],
-  "diagnostics": {
-    "question_terms": ["作业", "业迟", "迟交", "扣分"],
-    "question_segments": [["作业", "业迟", "迟交"], ["扣分"]],
-    "policy": {"min_coverage": 0.34, "min_segment_coverage": 0.5, "...": "..."},
-    "candidates": [{"chunk_id": "...", "title": "...", "score": 22.27, "coverage": 0.4, "segment_coverage": 0.5}],
-    "top_score": 22.27, "top_coverage": 0.4, "top_segment_coverage": 0.5,
-    "reason": "answered",
-    "selected": ["chk_xxx"]
-  },
-  "created_at": "2026-10-21T14:48:15+08:00"
-}
-```
+## 运行状态
 
-`mode` 取值：`extractive`（原句抽取）/ `llm`（模型基于引用生成）。`refused=true` 时 `citations` 为空，`answer` 以「现有资料不足以回答该问题。」开头，`diagnostics.reason` 为以下之一：
+`stats.retrieval` 包含 `mode: hybrid|lexical`、`ready`、`error`。完整 RAG 的 `vector_store` 提供 `engine: Qdrant`、`storage: local`、`chunks` 和 Embedding 的模型 ID、revision、dimension、pooling。
 
-| reason | 含义 |
-|---|---|
-| `no_question_terms` | 问题没有可检索实词 |
-| `empty_index` | 知识库为空 |
-| `no_candidates` | 没有分片与问题任何词匹配 |
-| `segment_coverage_below_threshold` | 问题词组覆盖率 < 50%（问题对象不在资料中） |
-| `coverage_below_threshold` | 内容词覆盖率 < 34%（主题相关但事实缺失） |
-| `score_below_threshold` | BM25 < 1.5 |
+`stats.llm` 包含 `configured`、`provider: openai-compatible|none`、模型名。Embedding 状态同样提供 `configured`、模型名、维度和配置版本。`configured` 仅表示配置状态，不保证下一次模型请求一定成功。
 
-## 环境变量
+不返回密钥或兼容服务地址；`data_dir` 仅为数据目录末级名称。
 
-| 变量 | 作用 |
-|---|---|
-| `EDU_DATA_DIR` | 数据目录（默认 `runtime/`） |
-| `EDU_API_TOKEN` | 可选访问控制；设置后所有 `/api/knowledge/*` 请求须携带 `Authorization: Bearer <token>`，下载同样需要 |
-| `EDU_LLM_BASE_URL` / `EDU_LLM_API_KEY` / `EDU_LLM_MODEL` | OpenAI 兼容模型；URL 与模型名称配置后启用，API key 可按提供方需要填写 |
+## 问答结果
 
-健康检查：`GET /healthz`。访问控制探测：`GET /api/auth/check` 返回 `{required:boolean}`，这两个接口不要求令牌。
+保留字段 `id`、`question`、`answer`、`mode`、`refused`、`citations`、`diagnostics`、`created_at`、`feedback`。
 
-损坏 PDF/DOCX 作为逐文件失败项返回，成功文件继续导入；全部失败返回 400。模型响应为坏 JSON、缺少文本或引用非法时自动降级为原文抽取，诊断原因保留在结果中。
+- `mode=llm`：实际采用了模型输出；`extractive`：原文抽取或检索阶段拒答。
+- `refused=true`：引用列表为空，答案以“现有资料不足以回答该问题。”开头。
+- `citations`：来源编号 `n`、document/chunk ID、title、heading、完整原文 `text`、原文摘录 `excerpt`、`score`、`coverage`、`segment_coverage`、`lexical_score`、`semantic_score`。
+- 完整 RAG 的 `score` 是排名融合分，`semantic_score` 是余弦相似度；词法模式的 `score` 为 BM25 分。两者不能直接比较，不是正确概率。
+- `diagnostics.retrieval.mode` 和 `diagnostics.model` 记录该次检索及回答模型；`candidates` 和 `selected` 可追溯实际证据。
+- `diagnostics.degraded=true` 表示模型校验/调用失败；`diagnostics.llm` 提供脱敏原因，如 `invalid_citations`、`unsupported_numbers`、`uncited_paragraph`、`error:`。
+- `evidence_basis=lexical_and_semantic` 表示证据同时通过词法和语义确认；`semantic` 表示只走语义路径。后者在生成失败时拒答，避免把相关片段硬凑成答案。
+
+常见 `diagnostics.reason`：`answered`、`no_question_terms`、`empty_index`、`no_candidates`、`semantic_score_below_threshold`、`unknown_identifiers`、`generation_not_grounded`；词法模式另有 `segment_coverage_below_threshold`、`coverage_below_threshold`、`score_below_threshold`。
+
+## 错误及同步
+
+400 输入或全部文件导入失败；401 令牌错误；404 资料/记录不存在；422 请求结构不合法；503 模型检索或索引依赖暂不可用。生成失败通常以 200 返回明确标记的抽取降级/拒答，检索失败则返回 503。
+
+SQLite 写入提交后才同步向量。若同步失败，资料仍可能已保存，索引标记为不可用并停止问答；修复依赖后调用 `/index/rebuild`，服务启动时也会自动对账。客户端不应在 503 后盲目重复提交同一份资料。

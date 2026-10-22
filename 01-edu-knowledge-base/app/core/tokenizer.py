@@ -101,7 +101,7 @@ def content_tokens(text: str) -> list[str]:
     return out
 
 
-_SENT_RE = re.compile(r"(?<=[。！？!?；;])\s*|\n+")
+_SENT_RE = re.compile(r"(?<=[。！？!?])\s*|\n+")
 
 
 def split_sentences(text: str) -> list[str]:

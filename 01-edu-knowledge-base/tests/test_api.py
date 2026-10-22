@@ -7,6 +7,7 @@ from pathlib import Path
 try:
     from fastapi.testclient import TestClient
     from app.main import create_app
+    from app.settings import RAGSettings
 except ImportError:  # pragma: no cover
     TestClient = None
 
@@ -16,7 +17,7 @@ class ApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()
-        cls.app = create_app(Path(cls.tmp.name))
+        cls.app = create_app(Path(cls.tmp.name), settings=RAGSettings(profile="lexical", llm_provider="none"))
         cls.client = TestClient(cls.app)
 
     @classmethod

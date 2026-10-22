@@ -17,36 +17,60 @@ from .core.answer import (
     format_source,
     is_refusal,
     select_evidence,
+    select_hybrid_evidence,
 )
 from .core.bm25 import BM25Index
 from .core.importers import ImportError_, parse_upload
-from .core.llm import LLMClient
+from .core.llm import LLMClient, validate_grounding
 from .core.store import CATEGORIES, KnowledgeStore, now_iso
 from .core.tokenizer import content_tokens, segments, tokenize
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent / "data" / "samples"
 _CITE_RE = re.compile(r"\[(\d+)\]")
+_ENGLISH_QUERY_WORDS = set("what why how when where which who does do is are a an the and or in of for to with can could would should explain please this that it its about many much mean means difference between".split())
 
 
 class KnowledgeService:
-    def __init__(self, data_dir: Path | str, policy: AnswerPolicy | None = None, llm: LLMClient | None = None):
+    def __init__(self, data_dir: Path | str, policy: AnswerPolicy | None = None, llm=None, vector_index=None):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.store = KnowledgeStore(self.data_dir / "knowledge.sqlite3")
         self.policy = policy or AnswerPolicy()
         self.llm = llm or LLMClient()
+        self.vector_index = vector_index
         self._lock = threading.RLock()
+        self._closed = False
+        self._index_error = None
         self._chunks: list[dict] = []
         self._index = BM25Index.build([])
         self._index_built_at = ""
-        self.rebuild_index()
+        try:
+            self.rebuild_index()
+        except Exception:
+            self.close()
+            raise
+
+    def close(self):
+        with self._lock:
+            if not self._closed:
+                if self.vector_index:
+                    self.vector_index.close()
+                self.store.close()
+                self._closed = True
 
     # ---------- 索引 ----------
-    def rebuild_index(self) -> None:
+    def rebuild_index(self, force_vectors: bool = False) -> None:
         with self._lock:
             self._chunks = self.store.all_chunks()
             docs = [tokenize(f"{c['heading']}\n{c['text']}" if c["heading"] else c["text"]) for c in self._chunks]
             self._index = BM25Index.build(docs)
+            if self.vector_index:
+                try:
+                    self.vector_index.sync(self._chunks, force=force_vectors)
+                except Exception as exc:
+                    self._index_error = "向量索引更新失败；资料已保存，请修复模型/存储后重建索引。"
+                    raise RuntimeError(self._index_error) from exc
+            self._index_error = None
             self._index_built_at = now_iso()
 
     # ---------- 文档 ----------
@@ -56,7 +80,10 @@ class KnowledgeService:
         s["policy"] = asdict(self.policy)
         s["categories_all"] = list(CATEGORIES)
         s["index"] = {"chunks": len(self._index), "rebuilt_at": self._index_built_at}
-        s["data_dir"] = str(self.data_dir)
+        s["retrieval"] = {"mode": "hybrid" if self.vector_index else "lexical", "ready": not bool(self._index_error),
+                          "error": self._index_error,
+                          "vector_store": self.vector_index.describe() if self.vector_index else None}
+        s["data_dir"] = self.data_dir.name
         return s
 
     def list_documents(self) -> list[dict]:
@@ -126,7 +153,27 @@ class KnowledgeService:
         q_content = content_tokens(question)
         q_segs = segments(question)
         with self._lock:
-            hits = self._index.search(q_tokens, top_k=top_k)
+            if self._index_error:
+                raise RuntimeError(self._index_error)
+            hits = self._index.search(q_tokens, top_k=max(top_k, 10) if self.vector_index else top_k)
+            semantic_scores = {}
+            lexical_scores = dict(hits)
+            if self.vector_index:
+                try:
+                    semantic = self.vector_index.search(question, top_k=max(top_k, 10))
+                except Exception as exc:
+                    raise RuntimeError("语义检索不可用，请检查 Embedding 和向量数据库后重试。") from exc
+                semantic_scores = dict(semantic)
+                by_id = {chunk["id"]: i for i, chunk in enumerate(self._chunks)}
+                # Reciprocal Rank Fusion：相异分数尺度不直接相加。
+                fused = {}
+                for rank, (i, _) in enumerate(hits, 1):
+                    fused[i] = fused.get(i, 0) + 1 / (60 + rank)
+                for rank, (cid, _) in enumerate(semantic, 1):
+                    if cid in by_id:
+                        i = by_id[cid]
+                        fused[i] = fused.get(i, 0) + 1 / (60 + rank)
+                hits = sorted(fused.items(), key=lambda item: (-item[1], item[0]))[:max(top_k, 10)]
             out = []
             for i, score in hits:
                 c = self._chunks[i]
@@ -138,18 +185,29 @@ class KnowledgeService:
                         coverage=self._index.coverage(q_content, i),
                         segment_coverage=(len(covered) / len(q_segs)) if q_segs else 0.0,
                         covered_segments=covered,
+                        semantic_score=semantic_scores.get(c["id"]),
+                        lexical_score=lexical_scores.get(i, 0.0),
                     )
                 )
         return out
 
     def ask(self, question: str) -> dict:
+        # 一次回答采用一致的资料快照；删除不能发生在检索与模型引用校验之间。
+        with self._lock:
+            return self._ask(question)
+
+    def _ask(self, question: str) -> dict:
         question = (question or "").strip()
         if not question:
             raise ValueError("问题不能为空")
         if len(question) > 500:
             raise ValueError("问题过长（上限 500 字）")
         q_content = content_tokens(question)
-        diagnostics: dict = {"question_terms": q_content, "question_segments": segments(question)}
+        diagnostics: dict = {"question_terms": q_content, "question_segments": segments(question), "degraded": False,
+                             "retrieval": {"mode": "hybrid" if self.vector_index else "lexical"},
+                             "model": self.llm.describe()}
+        if self._index_error:
+            raise RuntimeError(self._index_error)
         if len(q_content) < self.policy.min_question_terms:
             answer = REFUSAL_PREFIX + "问题中没有可检索的实词，请补充具体术语或关键词。"
             diagnostics["reason"] = "no_question_terms"
@@ -161,7 +219,16 @@ class KnowledgeService:
             return self.store.add_history(question, answer, "extractive", True, [], diagnostics)
 
         ranked = self.retrieve(question)
-        evidence, diag = select_evidence(ranked, self.policy)
+        if self.vector_index:
+            # 精确实体保护：不能用 Python 的资料来回答 Java、Shor 等库中没有出现的标识符。
+            terms = {t for t in q_content if t.isascii() and t[0].isalpha() and len(t) >= 3} - _ENGLISH_QUERY_WORDS
+            title_terms = {term for chunk in self._chunks for term in content_tokens(chunk["title"])}
+            missing = sorted(terms - set(self._index.df) - title_terms)
+            if missing:
+                diagnostics.update(reason="unknown_identifiers", missing_identifiers=missing)
+                answer = REFUSAL_PREFIX + "知识库没有出现问题中的标识符：" + "、".join(missing) + "。请补充相关资料。"
+                return self.store.add_history(question, answer, "extractive", True, [], diagnostics)
+        evidence, diag = (select_hybrid_evidence if self.vector_index else select_evidence)(ranked, self.policy)
         diagnostics.update(diag)
         if not evidence:
             answer = compose_refusal(question, ranked, diag, self.policy)
@@ -171,27 +238,38 @@ class KnowledgeService:
             {"n": n, "document_id": e.document_id, "title": e.title, "heading": e.heading,
              "chunk_id": e.chunk_id, "text": e.text, "excerpt": excerpt_for(question, e, self.policy),
              "score": round(e.score, 3), "coverage": round(e.coverage, 3),
-             "segment_coverage": round(e.segment_coverage, 3)}
+             "segment_coverage": round(e.segment_coverage, 3),
+             "semantic_score": round(e.semantic_score, 4) if e.semantic_score is not None else None,
+             "lexical_score": round(e.lexical_score, 3)}
             for n, e in enumerate(evidence, 1)
         ]
         mode = "extractive"
         answer = compose_extractive(question, evidence, self.policy)
         if self.llm.configured():
             try:
-                llm_text = self.llm.answer(question, [(c["n"], c["title"], c["text"]) for c in citations])
+                passages = [(c["n"], format_source(c["title"], c["heading"]), c["text"]) for c in citations]
+                llm_text = self.llm.answer(question, passages)
                 used = {int(n) for n in _CITE_RE.findall(llm_text)}
                 valid = set(range(1, len(citations) + 1))
                 if is_refusal(llm_text):
                     diagnostics["llm"] = "refused"
                     return self.store.add_history(question, llm_text, "llm", True, [], diagnostics)
-                if used and used <= valid:
+                issue = validate_grounding(llm_text, passages)
+                if issue is None:
                     answer, mode = llm_text, "llm"
                     citations = [c for c in citations if c["n"] in used]
                     diagnostics["llm"] = "accepted"
                 else:
-                    diagnostics["llm"] = f"invalid_citations:{sorted(used)}，已降级为抽取式"
-            except RuntimeError as e:
-                diagnostics["llm"] = f"error:{e}，已降级为抽取式"
+                    diagnostics["llm"] = f"{issue}，已降级为抽取式"
+                    diagnostics["degraded"] = True
+            except RuntimeError:
+                # 不把第三方异常原文（可能含 URL/凭证/本机路径）写进公开 API/问答导出。
+                diagnostics["llm"] = "error:模型调用失败，已降级为抽取式"
+                diagnostics["degraded"] = True
+        if self.vector_index and diagnostics.get("evidence_basis") == "semantic" and mode != "llm":
+            diagnostics["reason"] = "generation_not_grounded"
+            answer = REFUSAL_PREFIX + "仅找到语义相关片段，但回答未通过引用校验，无法确认资料足以回答。请补充更直接的资料后重试。"
+            return self.store.add_history(question, answer, "extractive", True, [], diagnostics)
         return self.store.add_history(question, answer, mode, False, citations, diagnostics)
 
     # ---------- 历史、反馈与导出 ----------

@@ -39,6 +39,7 @@ assert(['127.0.0.1', 'localhost', '[::1]'].includes(baseUrl.hostname), 'Use a lo
 const output = resolve(root, flag('--out', '.'));
 const reportOutput = join(root, 'screenshots');
 const token = flag('--token', process.env.EDU_API_TOKEN || '');
+const expectRag = process.env.EDU_EXPECT_RAG === '1';
 const skillDir = process.env.TASTE_SKILL_DIR || join(homedir(), '.agents', 'skills', 'design-taste-frontend');
 const { Browser, sleep } = await import(pathToFileURL(join(skillDir, 'scripts', 'lib', 'cdp.mjs')).href);
 const temporaryTitle = `浏览器回归验证 ${randomUUID().slice(0, 8)}`;
@@ -148,7 +149,7 @@ async function ask(question, keyboard = false) {
     const a = document.querySelector('#answer-area .answer');
     return a?.querySelector('.answer-q')?.textContent === question &&
       a.querySelector('.export')?.getAttribute('href') !== previousHref && !document.querySelector('#btn-ask').disabled;
-  }, { question, previousHref }, 'new answer', 30000);
+  }, { question, previousHref }, 'new answer', 90000);
   return currentRecord();
 }
 async function assertAnswerEvidence(record) {
@@ -179,6 +180,12 @@ async function assertAnswerEvidence(record) {
 try {
   await check('isolated review data is ready', async () => {
     const stats = await api('/stats');
+    if (expectRag) {
+      assert.equal(stats.retrieval.mode, 'hybrid');
+      assert.equal(stats.retrieval.vector_store.engine, 'Qdrant');
+      assert(stats.retrieval.vector_store.embedding.dimension > 0);
+      assert.equal(stats.llm.provider, 'openai-compatible');
+    }
     assert.equal(String(stats.data_dir).replaceAll('\\', '/').replace(/\/$/, '').split('/').at(-1), 'runtime-review', 'Refusing to mutate a service outside runtime-review');
     const documents = (await api('/documents')).documents;
     assert(documents.length > 0, 'Load example documents into runtime-review before running');
@@ -218,6 +225,10 @@ try {
     assert.equal(await page.eval(() => document.querySelector('#question').value), '换行验证\n', 'Shift+Enter inserts a newline');
     assert.equal(askRequests, requestsBefore, 'Shift+Enter does not submit');
     answeredRecord = await ask(supported.question, true);
+    if (expectRag) {
+      assert.equal(answeredRecord.mode, 'llm', 'Real model generation must reach the browser');
+      assert.equal(answeredRecord.diagnostics.degraded, false);
+    }
     assert.equal(askRequests, requestsBefore + 1, 'Enter submits exactly one real request');
     return assertAnswerEvidence(answeredRecord);
   });
@@ -366,6 +377,12 @@ try {
   await check('settings token save and layouts', async () => {
     await view('settings');
     await waitFor(() => document.querySelectorAll('#policy-table tr').length > 0 && document.querySelectorAll('#runtime-table tr').length > 0, undefined, 'real settings');
+    if (expectRag) {
+      assert.match(await page.eval(() => document.querySelector('#retrieval-info').textContent), /Qdrant/);
+      assert.match(await page.eval(() => document.querySelector('#llm-info').textContent), /兼容 API/);
+      await click('#rebuild-index');
+      await waitFor(() => document.querySelector('#rebuild-state').textContent.includes('索引已重建'), undefined, 'vector index rebuild', 30000);
+    }
     const value = token || 'browser-check-local-only';
     await fill('#token-input', value);
     await click('#form-token button[type="submit"]');

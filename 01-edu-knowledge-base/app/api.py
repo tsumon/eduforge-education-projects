@@ -57,6 +57,11 @@ def create_router(data_dir: Path | str | None = None, service: KnowledgeService 
     def stats():
         return svc.stats()
 
+    @router.post("/index/rebuild")
+    def rebuild_index():
+        svc.rebuild_index(force_vectors=True)
+        return svc.stats()
+
     # ---- 资料 ----
     @router.get("/documents")
     def list_documents():

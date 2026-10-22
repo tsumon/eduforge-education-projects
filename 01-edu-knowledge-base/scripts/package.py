@@ -15,14 +15,18 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).resolve().parent.parent
 PROJECT_LABEL = "教育知识库"
-EXCLUDE_DIRS = {".venv", "venv", "runtime", "runtime-review", ".taste-skill", "dist", "__pycache__", ".pytest_cache", ".git", "node_modules", ".idea", ".vscode"}
-EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".sqlite3", ".sqlite3-journal", ".log"}
+EXCLUDE_DIRS = {".venv", "venv", ".model-cache", ".uv-cache", ".taste-skill", "dist", "__pycache__", ".pytest_cache", ".git", "node_modules", ".idea", ".vscode"}
+EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".sqlite3", ".sqlite3-journal", ".sqlite", ".db", ".log", ".safetensors", ".pt", ".pth", ".bin", ".gguf", ".onnx"}
 EXCLUDE_FILES = {".env", ".DS_Store", "Thumbs.db"}
 
 
 def should_skip(path: Path) -> bool:
     rel = path.relative_to(ROOT)
-    if any(part in EXCLUDE_DIRS for part in rel.parts):
+    if any(part in EXCLUDE_DIRS or part.startswith("runtime") for part in rel.parts):
+        return True
+    if path.name.startswith(".env") and path.name not in {".env.example", ".env.sample"}:
+        return True
+    if path.name.endswith(".local.json"):
         return True
     if path.suffix.lower() in EXCLUDE_SUFFIXES or path.name in EXCLUDE_FILES:
         return True

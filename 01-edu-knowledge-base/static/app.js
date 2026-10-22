@@ -98,9 +98,11 @@
   async function loadStats() {
     try {
       stats = await api("/stats");
-      setStatus("ok", `${stats.document_count} 份资料 · ${stats.chunk_count} 个分片`);
+      const retrieval = stats.retrieval || { mode: "lexical", ready: true };
+      setStatus(retrieval.ready ? "ok" : "err", retrieval.ready ? `${stats.document_count} 份资料 · ${stats.chunk_count} 个分片` : "索引异常，请到设置重建");
       const llm = stats.llm && stats.llm.configured;
-      $("#status-mode").textContent = llm ? `模型生成 · ${stats.llm.model}` : "原文抽取";
+      $("#status-mode").textContent = `${retrieval.mode === "hybrid" ? "混合检索" : "词法检索"} · ${llm ? "API 生成" : "原文抽取"}`;
+      $("#status-mode").title = llm ? stats.llm.model : "未启用回答模型";
       if ($("#answer-empty-docs")) $("#answer-empty-docs").hidden = stats.document_count > 0;
       $("#library-doc-count").textContent = stats.document_count.toLocaleString("zh-CN");
       $("#library-chunk-count").textContent = stats.chunk_count.toLocaleString("zh-CN");
@@ -202,7 +204,7 @@
     const art = $(".answer", tpl);
     const cites = rec.citations || [];
     $(".answer-q", tpl).textContent = rec.question;
-    $(".pill-mode", tpl).textContent = rec.refused ? "资料不足" : rec.mode === "llm" ? "模型生成 · 基于引用" : "原文抽取";
+    $(".pill-mode", tpl).textContent = rec.refused ? "资料不足" : rec.mode === "llm" ? "模型生成 · 基于引用" : rec.diagnostics?.degraded ? "生成未通过 · 原文抽取" : "原文抽取";
     $(".result-title", tpl).textContent = rec.refused ? "当前资料无法支持回答" : "根据课程资料";
     if (rec.refused) $(".pill-mode", tpl).style.color = "var(--red)";
     const time = $(".answer-time", tpl);
@@ -230,7 +232,7 @@
       $(".citations", tpl).hidden = false;
       $(".citation-list", tpl).replaceChildren(...cites.map(c => el("li", { id: `cite-${c.n}`, value: c.n, tabindex: -1 }, [
         el("span", { class: "citation-src", text: sourceLabel(c) }),
-        el("span", { class: "citation-score", text: `词法匹配 ${c.score} · 内容词覆盖 ${Math.round(c.coverage * 100)}%` }),
+        el("span", { class: "citation-score", text: c.semantic_score != null ? `语义相似度 ${c.semantic_score.toFixed(3)} · 词法匹配 ${c.lexical_score}` : `词法匹配 ${c.score} · 内容词覆盖 ${Math.round(c.coverage * 100)}%` }),
         el("p", { class: "citation-text" }, highlightExcerpt(c.text, c.excerpt)),
       ])));
     }
@@ -482,17 +484,23 @@
     max_citations: ["最多引用数", ""],
     max_sentences_per_chunk: ["每片摘录句数", ""],
     min_question_terms: ["问题最少内容词", ""],
+    semantic_min_score: ["语义召回门槛", "余弦相似度，数值不是答案正确概率"],
   };
   function renderSettings() {
     if (!stats) return;
     $("#policy-table").replaceChildren(...Object.entries(stats.policy || {}).map(([k, v]) => {
       const [label, help] = policyLabels[k] || [k, ""];
-      return el("tr", {}, [el("th", { text: label, title: help }), el("td", { text: typeof v === "number" && v < 1 ? `${Math.round(v * 100)}%` : String(v) })]);
+      return el("tr", {}, [el("th", { text: label, title: help }), el("td", { text: k === "semantic_min_score" ? v.toFixed(2) : typeof v === "number" && v < 1 ? `${Math.round(v * 100)}%` : String(v) })]);
     }));
     const llm = stats.llm || {};
     $("#llm-info").replaceChildren(llm.configured
-      ? el("p", {}, [el("span", { class: "tag green", text: "已启用" }), ` 模型 ${llm.model}；回答模式 llm`])
+      ? el("p", {}, [el("span", { class: "tag green", text: "兼容 API" }), ` ${llm.model}；回答模式 llm`])
       : el("p", {}, [el("span", { class: "tag", text: "未配置" }), " 当前为原文抽取模式，不调用任何外部服务"]));
+    const retrieval = stats.retrieval || {};
+    const vector = retrieval.vector_store;
+    $("#retrieval-info").replaceChildren(vector
+      ? el("div", {}, [el("p", {}, [el("span", { class: `tag ${retrieval.ready ? "green" : "red"}`, text: retrieval.ready ? "已就绪" : "索引异常" }), " BM25 + 语义混合检索"]), el("p", { class: "connection-help", text: `${vector.embedding.model} · ${vector.embedding.dimension} 维` }), el("p", { class: "connection-help", text: `${vector.engine} 本地持久化 · ${vector.chunks} 个向量分片` }), el("p", { class: "model-revision muted", text: `版本 ${vector.embedding.revision.slice(0, 12)}` })])
+      : el("p", { text: "当前为词法检索模式；未启用 Embedding 和向量数据库。" }));
     $("#runtime-table").replaceChildren(
       el("tr", {}, [el("th", { text: "数据目录" }), el("td", { text: stats.data_dir || "" })]),
       el("tr", {}, [el("th", { text: "索引" }), el("td", { text: `${stats.index ? stats.index.chunks : 0} 个分片 · 重建于 ${stats.index ? fmtTime(stats.index.rebuilt_at) : "—"}` })]),
@@ -510,6 +518,20 @@
   });
   $("#token-clear").addEventListener("click", () => { localStorage.removeItem(tokenKey); $("#token-input").value = ""; toast("令牌已清除"); loadStats(); });
   $("#refresh-settings").addEventListener("click", loadStats);
+  $("#rebuild-index").addEventListener("click", async event => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    $("#rebuild-state").textContent = "正在重建，请稍候…";
+    try {
+      await postJSON("/index/rebuild", {});
+      await loadStats();
+      $("#rebuild-state").textContent = "索引已重建，资料与向量已同步。";
+    } catch (error) {
+      $("#rebuild-state").textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
 
   // ---------- 启动 ----------
   $("#token-input").value = getToken();

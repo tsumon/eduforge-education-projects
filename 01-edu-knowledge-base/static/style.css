@@ -22,3 +22,5 @@
 @media(max-width:760px){.table td.num,.table td.date-col{margin-left:auto;text-align:right}}
 @media(max-width:420px){.brand span:last-child{display:none}.library-counts dt{display:none}.library-counts dd::after{content:' 份';font-family:var(--sans);font-size:11px;color:var(--muted)}.library-counts>div+div dd::after{content:' 片'}.library-counts>div+div{padding-left:10px}.workflow{gap:5px;font-size:12px}.workflow span:nth-child(3),.workflow span:nth-child(4){display:none}.page-head p{max-width:24ch}.page-head .btn svg{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+#llm-info,#retrieval-info{overflow-wrap:anywhere}.model-revision{display:block;font-size:11px;color:var(--muted);margin-top:8px}#rebuild-index{margin-top:18px}
