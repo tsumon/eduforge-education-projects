@@ -1,0 +1,15 @@
+2026-10-22 Agent code verification; HTTP provider is a local scripted fixture, not a real model.
+Python 3.12.8; LangGraph 1.2.16. No model downloads or model weights were used.
+
+Command (run from this project):
+python -m pytest -q --tb=short
+
+Result:
+40 passed, 18 subtests passed in 3.03s
+
+Additional checks:
+Node syntax check: static/app.js and static/agent.js passed.
+Packaging filter excludes .env, local secrets, databases and runtime directories; includes .env.example.
+Python AST parsing passed. Both projects' app/agent_runtime.py are byte-identical.
+Independent code review findings fixed and regression-tested: unassessed topics cannot receive diagnostic findings; report/latest-run review state is read atomically.
+No original application restart, new browser run, or new screenshots in this change.

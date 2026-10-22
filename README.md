@@ -1,11 +1,11 @@
 # EduForge 教育项目实战
 
-三个独立项目：教育知识库、教学学情诊断与分层练习、知识库模型 LoRA 微调。源码使用 Python；两个 Web 应用使用 FastAPI、SQLite 和原生 HTML/CSS/JavaScript。
+三个独立项目：教育知识库 Agent、教学学情诊断 Agent 与分层练习、知识库模型 LoRA 微调。两个 Web 应用通过 LangGraph 和可配置模型 API 运行工具调用循环，使用 FastAPI、SQLite 和原生 HTML/CSS/JavaScript。
 
 | 项目 | 功能 | 入口 |
 |---|---|---|
-| [教育知识库](01-edu-knowledge-base/README.md) | Embedding API、Qdrant/BM25 混合检索、回答 API、原文引用、资料管理及历史导出 | 本机 8001 |
-| [学情诊断](02-learning-diagnostics/README.md) | CSV 导入、班级分析、失分证据、分层练习、人工复核与报告导出 | 本机 8002 |
+| [教育知识库 Agent](01-edu-knowledge-base/README.md) | 模型选择检索、改写、原文读取与核验工具；Embedding API、Qdrant/BM25、可追溯引用及调用记录 | 本机 8001 |
+| [学情诊断 Agent](02-learning-diagnostics/README.md) | 模型调用统计、进度、个人/知识点证据及题库工具，生成补讲和分层新练习；人工复核及运行留档 | 本机 8002 |
 | [LoRA 微调](03-kb-lora-finetune/README.md) | 训练、推理、独立评分脚本与真实 100 步 Qwen 训练报告 | 离线 HTML 报告 |
 
 ## 启动 Web 项目
@@ -27,10 +27,12 @@ python run.py
 ```powershell
 cd 02-learning-diagnostics
 python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# 填写支持 tools/tool_calls 的回答 API 配置
 python run.py
 ```
 
-打开 [学情诊断](http://127.0.0.1:8002)，导入 CSV 或点击“使用合成示例”。
+打开 [学情诊断](http://127.0.0.1:8002)，导入 CSV 或体验合成示例。未配置回答 API 时明确显示基础统计预览。
 
 ![知识问答与原文对照](01-edu-knowledge-base/01_桌面_知识问答.png)
 
@@ -48,10 +50,12 @@ python run.py
 
 RAG 的 API 改造新增后通过 83 项测试及 4 个子测试，使用本机 HTTP 提供商桩与真实 Qdrant；未调用真实模型 API，也未重跑界面截图，范围见 [API 版验证记录](01-edu-knowledge-base/docs/rag-validation.md)。
 
+随后 Agent 改造通过知识库 **98 项 + 4 个子测试**、学情诊断 **40 项 + 18 个子测试**。运行真实 LangGraph 和领域工具，模型由本机 HTTP 脚本替代；日志见 [知识库](01-edu-knowledge-base/docs/agent-test-log.txt)、[学情诊断](02-learning-diagnostics/docs/agent-test-log.txt)。本轮只改代码、配置示例及文档，没有重启原应用或生成新截图。
+
 32 张截图和训练曲线全部使用中文文件名，并直接放在各项目根目录。截图中的课程材料、学生姓名和成绩均为合成演示数据。字体及许可证保存在各 Web 项目的 `static/fonts/`。
 
 ## 使用范围
 
-两个 Web 应用适合本机教学辅助和受控试用。多人上线前仍需补齐个人账号与数据隔离、备份恢复、服务运维和目标负载验证；规则诊断与模型输出都需要人工核对。RAG 使用可配置的 Embedding API、Qdrant 与 BM25 混合检索、兼容回答 API，不下载或加载模型；无 API 时可显式选择词法模式。独立微调实验的模型没有加载到在线 RAG 服务。
+两个 Web 应用适合本机教学辅助和受控试用。多人上线前仍需补齐个人账号与数据隔离、备份恢复、服务运维和目标负载验证；统计及模型输出都需要人工核对。两个 Agent 的回答 API 须支持工具调用，不下载或加载模型。RAG 另接 Embedding API、Qdrant/BM25；无 API 时可显式选择基础预览。独立微调实验的模型没有加载到在线服务。
 
 发布目录不含实名提交包、聊天附件、运行数据库、`.env`、凭证、依赖目录或模型缓存。报告副本中的本机路径和主机信息已脱敏，训练指标与原始模型预测未改写。

@@ -12,7 +12,7 @@ def main():
     if args.data_dir:
         os.environ["DIAGNOSTICS_DATA_DIR"] = args.data_dir
     import uvicorn
-    uvicorn.run("app.main:app", host=args.host, port=args.port)
+    uvicorn.run("app.main:create_app", factory=True, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":

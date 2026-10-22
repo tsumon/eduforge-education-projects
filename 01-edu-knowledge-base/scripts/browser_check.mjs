@@ -226,7 +226,9 @@ try {
     assert.equal(askRequests, requestsBefore, 'Shift+Enter does not submit');
     answeredRecord = await ask(supported.question, true);
     if (expectRag) {
-      assert.equal(answeredRecord.mode, 'llm', 'Real model generation must reach the browser');
+      assert.equal(answeredRecord.mode, 'agent', 'Configured Agent output must reach the browser');
+      assert.equal(answeredRecord.diagnostics.agent.status, 'completed');
+      assert.ok(answeredRecord.diagnostics.agent.tool_calls >= 2, 'Agent must search and read evidence');
       assert.equal(answeredRecord.diagnostics.degraded, false);
     }
     assert.equal(askRequests, requestsBefore + 1, 'Enter submits exactly one real request');

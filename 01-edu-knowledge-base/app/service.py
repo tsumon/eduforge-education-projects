@@ -31,13 +31,15 @@ _ENGLISH_QUERY_WORDS = set("what why how when where which who does do is are a a
 
 
 class KnowledgeService:
-    def __init__(self, data_dir: Path | str, policy: AnswerPolicy | None = None, llm=None, vector_index=None):
+    def __init__(self, data_dir: Path | str, policy: AnswerPolicy | None = None, llm=None, vector_index=None,
+                 agent_client=None, agent_max_steps=8):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.store = KnowledgeStore(self.data_dir / "knowledge.sqlite3")
         self.policy = policy or AnswerPolicy()
         self.llm = llm or LLMClient()
         self.vector_index = vector_index
+        self.agent_client, self.agent_max_steps = agent_client, agent_max_steps
         self._lock = threading.RLock()
         self._closed = False
         self._index_error = None
@@ -77,6 +79,9 @@ class KnowledgeService:
     def stats(self) -> dict:
         s = self.store.stats()
         s["llm"] = self.llm.describe()
+        s["agent"] = {"enabled": self.agent_client is not None, "framework": "langgraph",
+                      "configured": bool(self.agent_client and self.agent_client.configured()),
+                      "max_steps": self.agent_max_steps}
         s["policy"] = asdict(self.policy)
         s["categories_all"] = list(CATEGORIES)
         s["index"] = {"chunks": len(self._index), "rebuilt_at": self._index_built_at}
@@ -192,6 +197,25 @@ class KnowledgeService:
         return out
 
     def ask(self, question: str) -> dict:
+        question = (question or "").strip()
+        if not question or len(question) > 500:
+            raise ValueError("问题需为 1—500 字")
+        if self.agent_client is not None:
+            from .knowledge_agent import KnowledgeAgent
+            from .agent_runtime import FinalAnswerError
+            agent = KnowledgeAgent(self, question)
+            # LangGraph 节点可以在线程中运行，不能持有门面的 RLock 跨整个模型循环。
+            run = agent.run()
+            with self._lock:
+                if run["status"] == "completed":
+                    try:
+                        agent.validate(run["result"]["answer"])
+                    except FinalAnswerError:
+                        run.update(status="failed", error="sources_changed_before_save", result=None)
+                result = run["result"] or {"answer": REFUSAL_PREFIX + "Agent 未完成核验，请检查 API 配置或稍后重试。",
+                                           "refused": True, "citations": []}
+                return self.store.add_history(question, result["answer"], "agent", result["refused"], result["citations"],
+                    {"agent": run, "retrieval": {"mode": "hybrid" if self.vector_index else "lexical"}, "degraded": False})
         # 一次回答采用一致的资料快照；删除不能发生在检索与模型引用校验之间。
         with self._lock:
             return self._ask(question)
@@ -307,7 +331,7 @@ class KnowledgeService:
             f"# 问答记录 {rec['id']}",
             "",
             f"- 时间：{rec['created_at']}",
-            f"- 模式：{rec['mode']}（extractive=资料原句抽取；llm=模型基于引用片段生成）",
+            f"- 模式：{rec['mode']}（agent=LangGraph工具调用与核验；extractive=资料原句抽取；llm=基础生成）",
             f"- 是否拒答：{'是' if rec['refused'] else '否'}",
             f"- 反馈：{'有帮助' if rec['feedback'] and rec['feedback']['helpful'] else ('没帮助' if rec['feedback'] else '未评价')}"
             + (f"（{rec['feedback']['note']}）" if rec.get("feedback") and rec["feedback"].get("note") else ""),

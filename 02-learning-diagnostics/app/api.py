@@ -5,7 +5,8 @@ from urllib.parse import quote
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
-from .service import DiagnosticsService, MAX_BYTES, MAX_CONFIG_BYTES
+from starlette.concurrency import run_in_threadpool
+from .service import DiagnosticsService, MAX_BYTES, MAX_CONFIG_BYTES, DEFAULT_GOAL
 
 
 def download(filename: str, text: str, media_type: str):
@@ -17,6 +18,11 @@ class ReviewIn(BaseModel):
     reviewer: str = Field(..., min_length=1, max_length=80)
     note: str = Field("", max_length=500)
     reviewed: bool = True
+    agent_run_id: str | None = Field(default=None, max_length=80)
+
+
+class GoalIn(BaseModel):
+    goal: str = Field(default=DEFAULT_GOAL, min_length=1, max_length=500)
 
 
 def require_token(authorization: str | None = Header(None)):
@@ -41,17 +47,20 @@ def create_router(data_dir: Path | str | None = None, service: DiagnosticsServic
             raise HTTPException(400, str(exc))
 
     @router.post("/demo")
-    def demo():
-        return svc.demo()
+    def demo(body: GoalIn | None = None):
+        try:
+            return svc.demo(body.goal if body else DEFAULT_GOAL)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
 
     @router.post("/upload")
     async def upload(file: UploadFile = File(...), syllabus: UploadFile | None = File(None),
-                     rubric: UploadFile | None = File(None), class_name: str = Form("")):
+                     rubric: UploadFile | None = File(None), class_name: str = Form(""), goal: str = Form(DEFAULT_GOAL)):
         try:
-            return svc.upload(file.filename or "", await file.read(MAX_BYTES + 1),
+            return await run_in_threadpool(svc.upload, file.filename or "", await file.read(MAX_BYTES + 1),
                               syllabus_raw=await syllabus.read(MAX_CONFIG_BYTES + 1) if syllabus else None,
                               rubric_raw=await rubric.read(MAX_CONFIG_BYTES + 1) if rubric else None,
-                              class_name=class_name)
+                              class_name=class_name, goal=goal)
         except ValueError as exc:
             raise HTTPException(400, str(exc))
 
@@ -73,10 +82,27 @@ def create_router(data_dir: Path | str | None = None, service: DiagnosticsServic
             raise HTTPException(404, "报告不存在")
         return download(f"学情诊断_{report_id}.md", text, "text/markdown")
 
+    @router.post("/reports/{report_id}/agent")
+    def run_agent(report_id: str, body: GoalIn):
+        try:
+            run = svc.run_agent(report_id, body.goal)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
+        if run is None:
+            raise HTTPException(404, "报告不存在")
+        return run
+
+    @router.get("/reports/{report_id}/agent-runs")
+    def agent_runs(report_id: str):
+        runs = svc.agent_runs(report_id)
+        if runs is None:
+            raise HTTPException(404, "报告不存在")
+        return {"runs": runs}
+
     @router.post("/reports/{report_id}/review")
     def review(report_id: str, body: ReviewIn):
         try:
-            report = svc.review(report_id, body.reviewer, body.note, body.reviewed)
+            report = svc.review(report_id, body.reviewer, body.note, body.reviewed, agent_run_id=body.agent_run_id)
         except ValueError as exc:
             raise HTTPException(400, str(exc))
         if report is None:

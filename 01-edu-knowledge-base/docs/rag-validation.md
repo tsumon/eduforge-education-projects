@@ -9,3 +9,9 @@
 - 有 1 条上游 Starlette/httpx 测试客户端弃用提示，不影响测试通过。
 
 接口适配代码及配置见 `app/core/embeddings.py`、`app/core/llm.py`、`app/settings.py` 和 `.env.example`。旧的界面截图、微调训练结果与本轮 API 代码测试相互独立。
+
+## LangGraph Agent 改造后的验证
+
+当前知识库通过 98 项测试与 4 个子测试，原 API 版结果作为上面的历史记录保留。新增覆盖真实工具协议的搜索改写、读取原文、错误参数调整、引用及数字修复、超限终止、删除后的引用拒绝、图节点内关闭 LangSmith 自动追踪、调用记录与历史导出。完整命令及结果见 [Agent 测试日志](agent-test-log.txt)。
+
+默认应用工厂启用 Agent，HTTP 集成测试实际执行 LangGraph、Embedding HTTP、Qdrant、模型工具 HTTP 和 SQLite。基础 RAG 回归测试显式关闭 Agent，继续检查检索和底层接口。两个项目均未调用真实模型提供商，未声称生成质量验收。

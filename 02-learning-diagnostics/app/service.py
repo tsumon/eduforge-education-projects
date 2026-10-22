@@ -1,4 +1,4 @@
-"""CSV → 校验 → 评分 → 规则诊断 → SQLite 报告，不依赖 Web 框架。"""
+"""CSV → 确定性统计工具 → LangGraph Agent → 可复核报告。"""
 from __future__ import annotations
 
 import csv
@@ -12,10 +12,12 @@ from .core.diagnosis import build_report, MAX_STUDENTS, MAX_TOPICS, MAX_MATRIX_C
 from .core.schema import REQUIRED, OPTIONAL, MAX_ROWS, MAX_POINTS, TYPE_LABELS, parse_csv
 from .core.scoring import LEVEL_LABELS
 from .core.store import ReportStore
+from .agent_runtime import ToolChatClient
 
 ROOT = Path(__file__).resolve().parent.parent
 MAX_BYTES = 8 * 1024 * 1024
 MAX_CONFIG_BYTES = 256 * 1024
+DEFAULT_GOAL = "根据本次成绩、输入错因和授课进度，找出需要核对的薄弱点，提出具体补讲步骤并生成分层练习。"
 
 
 def _configuration(raw: bytes, label: str) -> dict:
@@ -31,8 +33,14 @@ def _configuration(raw: bytes, label: str) -> dict:
 
 
 class DiagnosticsService:
-    def __init__(self, data_dir: Path | str):
+    def __init__(self, data_dir: Path | str, *, agent_client=None, agent_enabled=True, agent_max_steps=8):
         self.store = ReportStore(Path(data_dir) / "diagnostics.sqlite3")
+        self.agent_client = agent_client or ToolChatClient()
+        self.agent_enabled, self.agent_max_steps = agent_enabled, agent_max_steps
+
+    def agent_info(self):
+        return {"enabled": self.agent_enabled, "configured": self.agent_client.configured(), "framework": "langgraph",
+                "max_steps": self.agent_max_steps, "model": self.agent_client.describe()}
 
     def schema(self) -> dict:
         labels = {"student_id": "学号", "name": "姓名", "topic": "知识点", "assessment_type": "考核类型", "item": "题目",
@@ -42,7 +50,7 @@ class DiagnosticsService:
                         "score": "有限数字，0≤得分≤满分", "max_score": f"有限数字，0<满分≤{MAX_POINTS}",
                         "date": "YYYY-MM-DD；格式错误会告警并置空", "error_tag": "输入者标注的错因；缺失不推断原因", "note": "输入者提供的原题或观察备注"}
         return {"columns": [{"key": key, "label": labels[key], "required": key in REQUIRED, "description": descriptions[key]} for key in REQUIRED + OPTIONAL],
-                "assessment_types": TYPE_LABELS, "level_labels": LEVEL_LABELS,
+                "assessment_types": TYPE_LABELS, "level_labels": LEVEL_LABELS, "agent": self.agent_info(),
                 "rubric": load_rubric().to_dict(), "syllabus": load_syllabus().to_dict(),
                 "limits": {"csv_bytes": MAX_BYTES, "config_bytes": MAX_CONFIG_BYTES, "max_rows": MAX_ROWS, "max_points": MAX_POINTS,
                            "max_students": MAX_STUDENTS, "max_topics": MAX_TOPICS, "max_student_topic_cells": MAX_MATRIX_CELLS},
@@ -56,7 +64,8 @@ class DiagnosticsService:
         raise ValueError("示例类型必须是 csv、syllabus 或 rubric")
 
     def upload(self, filename: str, raw: bytes, syllabus_raw: bytes | None = None,
-               rubric_raw: bytes | None = None, class_name: str = "", is_demo: bool = False) -> dict:
+               rubric_raw: bytes | None = None, class_name: str = "", is_demo: bool = False, goal: str = DEFAULT_GOAL) -> dict:
+        goal = self.validate_goal(goal)
         name = PurePosixPath((filename or "").replace("\\", "/")).name
         if not name or PurePosixPath(name).suffix.lower() != ".csv":
             raise ValueError("仅支持 .csv 文件")
@@ -82,19 +91,53 @@ class DiagnosticsService:
         if is_demo:
             report["warnings"].insert(0, "当前报告来自合成演示数据：姓名、学号、成绩和错因均非真实学生资料。")
         self.store.save(report)
-        return report
+        if self.agent_enabled and self.agent_client.configured():
+            self.run_agent(report["id"], goal)
+        return self.get_report(report["id"])
 
-    def demo(self) -> dict:
+    def demo(self, goal: str = DEFAULT_GOAL) -> dict:
         filename, text, _ = self.sample()
-        return self.upload(filename, text.encode("utf-8"), is_demo=True)
+        return self.upload(filename, text.encode("utf-8"), is_demo=True, goal=goal)
 
     def reports(self, limit: int = 100) -> dict:
         return {"reports": self.store.list(limit)}
 
     def get_report(self, report_id: str) -> dict | None:
-        return self.store.get(report_id)
+        snapshot = self.store.get_with_latest(report_id)
+        if snapshot is None:
+            return None
+        report, latest = snapshot
+        report["agent"] = latest if latest else {**self.agent_info(), "status": "not_run" if self.agent_enabled and self.agent_client.configured() else ("not_configured" if self.agent_enabled else "disabled"),
+            "id": None, "result": None, "events": [], "steps": 0, "tool_calls": 0,
+            "review": {"status": "pending"}, "error": None}
+        report["mode"] = "agent" if report["agent"]["status"] == "completed" else "statistics_preview"
+        return report
 
-    def review(self, report_id: str, reviewer: str, note: str = "", reviewed: bool = True) -> dict | None:
+    @staticmethod
+    def validate_goal(goal):
+        if not isinstance(goal, str) or not 1 <= len(goal.strip()) <= 500:
+            raise ValueError("诊断目标需为 1—500 字")
+        return goal.strip()
+
+    def run_agent(self, report_id: str, goal: str = DEFAULT_GOAL) -> dict | None:
+        goal = self.validate_goal(goal)
+        report = self.store.get(report_id)
+        if report is None:
+            return None
+        if not self.agent_enabled:
+            raise ValueError("Agent 已关闭，请设置 EDU_AGENT_ENABLED=true")
+        from .diagnostic_agent import DiagnosticAgent
+        run = DiagnosticAgent(report, self.agent_client, self.agent_max_steps).run(goal)
+        now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+        run.update(id=f"agent_{uuid.uuid4().hex[:12]}", report_id=report_id, goal=goal, created_at=now,
+                   review={"status": "pending", "reviewer": "", "note": "", "reviewed_at": None})
+        self.store.save_agent(report_id, run)
+        return run
+
+    def agent_runs(self, report_id: str) -> list[dict] | None:
+        return self.store.agent_runs(report_id) if self.store.get(report_id) else None
+
+    def review(self, report_id: str, reviewer: str, note: str = "", reviewed: bool = True, agent_run_id: str | None = None) -> dict | None:
         if not isinstance(reviewer, str) or not 1 <= len(reviewer.strip()) <= 80:
             raise ValueError("复核人需填写 1—80 字姓名或标识")
         if not isinstance(note, str) or len(note) > 500:
@@ -104,7 +147,8 @@ class DiagnosticsService:
                   "note": note.strip(), "reviewed_at": now if reviewed else None}
         event = {"action": "reviewed" if reviewed else "review_reset", "created_at": now,
                  "reviewer": reviewer.strip(), "note": note.strip()}
-        return self.store.update_review(report_id, review, event)
+        updated = self.store.update_review(report_id, review, event, agent_run_id=agent_run_id)
+        return self.get_report(report_id) if updated else None
 
     def export_markdown(self, report_id: str) -> str | None:
         report = self.get_report(report_id)
@@ -119,6 +163,26 @@ class DiagnosticsService:
         review = report.get("review", {})
         lines.insert(6, f"- 人工复核：{'已复核' if review.get('status') == 'reviewed' else '待复核'}；复核人：{review.get('reviewer') or '未填写'}；复核时间：{review.get('reviewed_at') or '—'}。")
         lines.extend(f"- {warning}" for warning in report["warnings"])
+        agent = report["agent"]
+        lines += ["", "## Agent 诊断建议", "", f"- 框架：LangGraph；状态：{agent['status']}；运行：{agent.get('id') or '尚未运行'}。",
+                  "- 模型建议须教师复核；以下统计工具结果与模型方案分别保留。", ""]
+        if agent.get("result"):
+            plan = agent["result"]
+            lines += [plan["summary"], "", "### 发现与依据", ""]
+            for item in plan["findings"]:
+                lines.append(f"- {item['topic']}：{item['statement']}（{', '.join(item['evidence_ids'])}）")
+            lines += ["", "### Agent 补讲方案", ""]
+            for item in plan["reteaching"]:
+                lines += [f"#### {item['topic']}", item["reason"], f"依据：{', '.join(item['evidence_ids'])}"] + [f"- {action}" for action in item["actions"]]
+            lines += ["", "### Agent 生成的新练习", ""]
+            for item in plan["exercises"]:
+                lines += [f"#### {item['topic']} · {LEVEL_LABELS[item['level']]}", item["question"], f"提示：{item['hint']}",
+                          f"参考答案：{item['answer']}", f"依据：{', '.join(item['evidence_ids'])}；复核：{item['review_status']}。", ""]
+            lines += ["### 尚需核对", ""] + [f"- {message}" for message in plan["missing_data"]]
+            lines += ["", "### Agent 引用的工具证据", "", "```json", json.dumps(plan["evidence"], ensure_ascii=False, indent=2), "```", ""]
+        else:
+            lines.append("当前仅有基础统计预览；请配置支持工具调用的回答 API 后运行 Agent。" if agent["status"] in {"not_configured", "not_run", "disabled"} else "本次 Agent 失败或超限，未发布未核验的生成内容。")
+        lines += ["", "### 工具调用记录", "", "```json", json.dumps(agent["events"], ensure_ascii=False, indent=2), "```", ""]
         lines += ["", "## 班级知识点", ""]
         for topic in report["topics"]:
             lines.append(f"- {topic['topic']}：{value(topic['mastery'])}；状态 {topic['status']}；可评估 {topic['assessed_count']} 人，薄弱 {topic['weak_count']} 人。")

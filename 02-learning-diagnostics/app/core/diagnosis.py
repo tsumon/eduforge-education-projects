@@ -124,7 +124,7 @@ def build_report(parsed: ParseResult, rubric: Rubric, syllabus: Syllabus, bank: 
             "insufficient_student_count": insufficient},
         "topics": topics, "students": students, "reteaching": reteaching,
         "warnings": list(dict.fromkeys(warnings)), "parse_stats": parsed.stats,
-        "methodology": {"mode": "rule_based", "description": "按上传成绩与显式错因标签进行规则统计，不使用大模型，不推断心理或认知成因。",
+        "methodology": {"mode": "rule_based", "description": "本统计工具按上传成绩与显式错因标签计算；Agent 读取这些结果生成教学方案，不改写成绩，不推断心理成因。",
             "formula": "同一考核类型内Σ得分/Σ满分，再按权重归一；个人与班级均分分别对可评估知识点、可评估学生等权平均。",
             "minimum_records": rubric.min_records_per_topic, "missing_data": "不足记录、未授课、进度外知识点均不按零分计入。",
             "scope": "只描述本次上传样本；分层是练习建议，不是固定能力标签。", "rubric": rubric.to_dict(), "syllabus": syllabus.to_dict()},

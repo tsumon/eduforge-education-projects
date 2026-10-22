@@ -4,18 +4,20 @@
 
 | 方法 | 路径 | 输入与输出 |
 |---|---|---|
-| GET | `/schema` | 列说明、类型映射、分层标签、默认 rubric/syllabus、输入限制和方法说明 |
+| GET | `/schema` | 列说明、类型映射、分层标签、默认 rubric/syllabus、输入限制和方法说明，及脱敏 `agent` 配置状态 |
 | GET | `/sample?kind=csv` | 合成 CSV 下载，UTF-8 BOM；默认 kind 为 csv |
 | GET | `/sample?kind=syllabus` | 默认进度 JSON 下载 |
 | GET | `/sample?kind=rubric` | 默认评分 JSON 下载 |
-| POST | `/demo` | 读取合成CSV生成并保存报告；`is_demo=true`，告警中注明合成资料 |
-| POST | `/upload` | multipart 必需 `file`（CSV），可选 `syllabus`、`rubric`（UTF-8 JSON文件）、`class_name`（文本），返回并保存完整报告 |
+| POST | `/demo` | 读取合成CSV生成并保存报告；可选 JSON `{goal}`，配置 API 时自动运行 Agent |
+| POST | `/upload` | multipart 必需 `file`（CSV），可选 `syllabus`、`rubric`（UTF-8 JSON文件）、`class_name`、`goal`（文本），配置 API 时自动运行 Agent |
 | GET | `/reports?limit=100` | `{reports:[{id,class_name,course,created_at,source_name,is_demo,student_count,average_mastery}]}`，新→旧，limit 1—200 |
 | GET | `/reports/{id}` | 完整报告；不存在 404 |
 | GET | `/reports/{id}/export` | Markdown下载，包含个体证据、补讲、题目/提示/答案、方法与评分进度快照；不存在404 |
-| POST | `/reports/{id}/review` | JSON `{reviewer,note?,reviewed?:true}`，保存人工复核并返回完整报告；`reviewed:false`撤回到待复核。reviewer 1—80字、note最多500字，不存在404 |
+| POST | `/reports/{id}/agent` | JSON `{goal}`，基于指定报告快照运行 Agent，返回并保存运行记录；goal 1—500字，不存在404 |
+| GET | `/reports/{id}/agent-runs` | `{runs:[...]}`，最新完成在前，最多20次运行；含失败、超限和未配置记录，不存在404 |
+| POST | `/reports/{id}/review` | JSON `{reviewer,note?,reviewed?:true,agent_run_id?}`；存在 Agent 运行时必须匹配最新运行 ID，否则400；返回完整报告，`reviewed:false`撤回。reviewer 1—80字、note最多500字，不存在404 |
 
-`GET /healthz` 返回 `{ok:true,version,mode:"rule_based"}`。不自动生成报告，不向外部模型或服务发送成绩。
+`GET /healthz` 返回 `{ok:true,version,mode:"agent"|"statistics_preview",agent_configured}`。只反映服务及配置状态，不探测模型可用性，也不返回学生资料。运行 Agent 会把目标和工具所选统计/证据发送到配置的回答提供商。
 
 ## 报告结构
 
@@ -70,3 +72,15 @@ CSV 8MB、50,000行；配置256KB；非法/非有限数字跳过并告警。满�
 完整报告还包含 `review:{status:"pending"|"reviewed",reviewer,note,reviewed_at}` 与 `audit_log:[{action,created_at,...}]`。新报告初始待复核，创建操作记录包含来源文件、时间及是否合成示例。复核保存复核人、时间和备注；撤回追加 `review_reset` 操作记录，不会删除旧记录或重算成绩。列表摘要额外返回 `review_status`。报告与导出均提示需要教师人工复核，不执行自动处罚或正式学生评价。自行填写的复核人是操作标识，不代表认证身份。
 
 启用令牌时，浏览器下载必须通过带 Authorization 的 fetch 获取 Blob；普通 `<a href>` 下载不会携带会话保存的令牌。
+
+## Agent 运行与报告
+
+原有 summary、topics、students、reteaching、methodology 继续保存确定性统计及题库参考；`methodology.mode=rule_based` 描述统计工具。完整报告另有 `mode=agent|statistics_preview` 和 `agent` 最新运行，模型生成方案位于 `agent.result`，不覆盖成绩。
+
+运行包含 `id,report_id,goal,created_at,framework:"langgraph",status,model,steps,tool_calls,events,result,error,review`。状态为 `completed / failed / limited / not_configured`；没有运行时可为 `not_run / disabled`。未配置默认只生成基础统计，不自动调用模型；显式运行未配置 Agent 则保留 `not_configured` 记录。
+
+结果包含 summary、summary_evidence_ids、findings、reteaching、exercises、missing_data、evidence。发现与方案引用实际观察的 `E1` 等证据；新练习有 `origin=model_generated`、`review_status=pending|reviewed`、question/hint/answer、topic/level、student_ids、evidence_ids。空 student_ids 表示供该层级参考。指定个人需读取该学号及相同知识点证据，且层级和已授课状态必须匹配。
+
+events 保存 `kind=tool` 的工具名、调用编号、参数、状态、观察，以及 `kind=validation` 的核验结果；不记录隐藏思考过程。默认 8 次模型决策、12 次工具调用，错误、缺失或编造的证据可在预算内修正。失败或超限 `result=null`，只保留统计预览。HTTP 200 表示报告/运行记录已返回，调用方仍须检查 `agent.status`。
+
+每次新运行会将报告和新方案设为待复核；旧方案复核状态不转移。评分与进度快照不变。Markdown 包含最新 Agent 方案、引用证据与工具记录。提供商地址、密钥和原始错误不进入响应；工具绑定当前报告，无跨报告 ID 或写入工具。

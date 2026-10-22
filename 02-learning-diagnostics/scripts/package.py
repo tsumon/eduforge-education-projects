@@ -14,7 +14,7 @@ LOCAL_FILES = {".envrc", ".python-version", ".coverage", ".ds_store", "thumbs.db
 def excluded(relative: Path) -> bool:
     parts = [part.lower() for part in relative.parts]
     filename = parts[-1]
-    return (any(part in EXCLUDED or part.startswith("runtime-") or part == ".env" or part.startswith(".env.") for part in parts)
+    return (any(part in EXCLUDED or part.startswith("runtime-") or part == ".env" or (part.startswith(".env.") and part != ".env.example") for part in parts)
             or filename in LOCAL_FILES or filename.endswith((".pyc", ".pyo", ".zip", ".log", ".local"))
             or ".sqlite3" in filename or bool(re.search(r"\.(?:sqlite|db)(?:$|[-.])", filename)))
 

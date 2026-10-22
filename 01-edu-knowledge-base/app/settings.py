@@ -23,8 +23,12 @@ class RAGSettings:
     llm_model: str = ""
     timeout: float = 30.0
     semantic_min_score: float = 0.50
+    agent_enabled: bool = True
+    agent_max_steps: int = 8
 
     def __post_init__(self):
+        if not 1 <= self.agent_max_steps <= 20:
+            raise ValueError("EDU_AGENT_MAX_STEPS 须为 1..20")
         if self.profile not in {"rag", "lexical"} or self.llm_provider not in {"openai", "none"}:
             raise ValueError("profile 必须为 rag/lexical，回答模型类型必须为 openai/none")
         if not 1 <= self.embedding_dimension <= 65536:
@@ -57,4 +61,6 @@ class RAGSettings:
                    embedding_query_prefix=os.environ.get("EDU_EMBEDDING_QUERY_PREFIX", ""),
                    llm_base_url=os.environ.get("EDU_LLM_BASE_URL", ""), llm_api_key=os.environ.get("EDU_LLM_API_KEY", ""),
                    llm_model=os.environ.get("EDU_LLM_MODEL", ""), timeout=float(os.environ.get("EDU_API_TIMEOUT", "30")),
-                   semantic_min_score=float(os.environ.get("EDU_SEMANTIC_MIN_SCORE", "0.50")))
+                   semantic_min_score=float(os.environ.get("EDU_SEMANTIC_MIN_SCORE", "0.50")),
+                   agent_enabled=os.environ.get("EDU_AGENT_ENABLED", "true").lower() in {"true", "1", "yes"},
+                   agent_max_steps=int(os.environ.get("EDU_AGENT_MAX_STEPS", "8")))

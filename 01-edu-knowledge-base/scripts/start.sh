@@ -7,5 +7,5 @@ if [ ! -d .venv ]; then
 fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
-python -c "import fastapi, uvicorn, multipart, qdrant_client, dotenv" 2>/dev/null || python -m pip install -r requirements.txt
+python -c "import fastapi, uvicorn, multipart, qdrant_client, dotenv, langgraph" 2>/dev/null || python -m pip install -r requirements.txt
 exec python run.py --load-samples "$@"

@@ -36,7 +36,7 @@ function evidenceList(values, empty = '尚无可展示的失分证据。') { ret
 function renderMethodology(methodology) {
   if (!methodology) return '<p>未提供方法说明。</p>';
   if (typeof methodology === 'string') return `<p>${esc(methodology)}</p>`;
-  return `<p>${esc(methodology.description || '按显式评分规则计算，不调用大模型。')}</p><p>${esc(methodology.formula || '')}</p><p>${esc(methodology.missing_data || '')}</p><p>${esc(methodology.scope || '')}</p><details class="snapshot"><summary>完整评分标准与课程进度快照</summary><pre>${esc(JSON.stringify({ rubric: methodology.rubric, syllabus: methodology.syllabus }, null, 2))}</pre></details>`;
+  return `<p>${esc(methodology.description || '统计工具按显式评分规则计算，Agent 方案另列。')}</p><p>${esc(methodology.formula || '')}</p><p>${esc(methodology.missing_data || '')}</p><p>${esc(methodology.scope || '')}</p><details class="snapshot"><summary>完整评分标准与课程进度快照</summary><pre>${esc(JSON.stringify({ rubric: methodology.rubric, syllabus: methodology.syllabus }, null, 2))}</pre></details>`;
 }
 function renderReport(report) {
   state.report = report;
@@ -51,6 +51,7 @@ function renderReport(report) {
   $('#report-created').textContent = '生成于 ' + when(report.created_at);
   $('#demo-tag').hidden = !report.is_demo;
   renderReview(report);
+  renderAgent(report);
   const summary = report.summary;
   const metrics = [
     ['参与学生', count(summary.student_count), '人', `${count(summary.assessed_student_count ?? report.students.filter(s => s.mastery !== null).length)} 人达到数据要求`],
@@ -87,8 +88,11 @@ function showStudent(id) {
   if (!student) return;
   $('#student-dialog-title').textContent = student.name;
   $('#student-dialog-id').textContent = student.student_id;
-  $('#student-detail').innerHTML = `<div class="detail-stats"><div><strong>${score(student.mastery)}</strong><span>掌握度 / 100</span></div><span class="tag">${levels[student.level] || '数据不足，暂不分层'}</span></div><section class="detail-section"><h3>个人知识点</h3><table class="data-table"><thead><tr><th>知识点</th><th class="num">掌握度</th><th class="num">记录</th><th>判定</th></tr></thead><tbody>${student.topic_scores.map(topic => `<tr><td>${esc(topic.topic)}</td><td class="num">${score(topic.mastery)}</td><td class="num">${count(topic.record_count)}</td><td class="quiet">${statuses[topic.status] || esc(topic.status)}</td></tr>`).join('')}</tbody></table></section><section class="detail-section"><h3>失分证据与数据说明</h3>${evidenceList(student.evidence)}</section><section class="detail-section"><h3>本次分层练习 · ${student.exercises.length} 题</h3>${student.exercises.length ? student.exercises.map((exercise, index) => `<article class="exercise"><div class="exercise-meta"><strong>${index + 1}. ${esc(exercise.topic)}</strong><span class="tag">${levels[exercise.level] || esc(exercise.level)}</span></div><p>${esc(exercise.question)}</p><details><summary>查看提示</summary><p>${esc(exercise.hint)}</p></details><details><summary>查看参考答案</summary><p>${esc(exercise.answer)}</p></details></article>`).join('') : '<p class="quiet">暂未分配练习。请先补充有效考核记录或对应题库。</p>'}</section><p class="detail-note">这些建议只针对本次数据，不代表固定能力标签。请先独立作答，再展开提示和答案。</p>`;
+  $('#student-detail').innerHTML = `<div class="detail-stats"><div><strong>${score(student.mastery)}</strong><span>掌握度 / 100</span></div><span class="tag">${levels[student.level] || '数据不足，暂不分层'}</span></div><section class="detail-section"><h3>个人知识点</h3><table class="data-table"><thead><tr><th>知识点</th><th class="num">掌握度</th><th class="num">记录</th><th>判定</th></tr></thead><tbody>${student.topic_scores.map(topic => `<tr><td>${esc(topic.topic)}</td><td class="num">${score(topic.mastery)}</td><td class="num">${count(topic.record_count)}</td><td class="quiet">${statuses[topic.status] || esc(topic.status)}</td></tr>`).join('')}</tbody></table></section><section class="detail-section"><h3>失分证据与数据说明</h3>${evidenceList(student.evidence)}</section><section class="detail-section"><h3>本地题库参考 · ${student.exercises.length} 题</h3>${student.exercises.length ? student.exercises.map((exercise, index) => `<article class="exercise"><div class="exercise-meta"><strong>${index + 1}. ${esc(exercise.topic)}</strong><span class="tag">${levels[exercise.level] || esc(exercise.level)}</span></div><p>${esc(exercise.question)}</p><details><summary>查看提示</summary><p>${esc(exercise.hint)}</p></details><details><summary>查看参考答案</summary><p>${esc(exercise.answer)}</p></details></article>`).join('') : '<p class="quiet">暂未分配练习。请先补充有效考核记录或对应题库。</p>'}</section><p class="detail-note">这些建议只针对本次数据，不代表固定能力标签。请先独立作答，再展开提示和答案。</p>`;
   $('#student-dialog').showModal();
+  const generated = (state.report?.agent?.result?.exercises || []).filter(exercise =>
+    exercise.student_ids.length ? exercise.student_ids.includes(student.student_id) : exercise.level === student.level && student.topic_scores.some(topic => topic.topic === exercise.topic && topic.status === 'assessed'));
+  $('#student-detail').insertAdjacentHTML('beforeend', `<section class="detail-section"><h3>Agent 生成的新练习</h3>${generated.length ? generated.map(exercise => renderAgentExercise(exercise)).join('') : '<p class="quiet">本次 Agent 尚未针对该学生或其层级生成练习。上方保留本地题库参考。</p>'}</section>`);
 }
 function showTopic(index) {
   const topic = state.report?.topics[index];
@@ -140,6 +144,7 @@ async function upload(event) {
     const payload = new FormData(); payload.append('file', csv);
     for (const field of ['syllabus', 'rubric']) { const file = form.elements[field].files[0]; if (file) { if (!/\.json$/i.test(file.name)) throw new Error(`${field} 配置需为 .json 文件。`); if (file.size > 256 * 1024) throw new Error(`${field} 配置不能超过 256 KB。`); payload.append(field, file); } }
     if (form.elements.class_name.value.trim()) payload.append('class_name', form.elements.class_name.value.trim());
+    if (form.elements.goal.value.trim()) payload.append('goal', form.elements.goal.value.trim());
     setBusy(true, '正在校验记录并生成报告…');
     const report = await api('/upload', { method: 'POST', body: payload });
     renderReport(report); await refreshHistory(); location.hash = 'overview'; window.scrollTo({ top: 0, behavior: 'instant' }); toast('报告已生成并保存。请核对数据质量提示。');
@@ -153,8 +158,8 @@ async function downloadFile(path, fallback) {
 function exportReport() { if (state.report) downloadFile('/api/diagnostics/reports/' + encodeURIComponent(state.report.id) + '/export', `${state.report.class_name}_学情诊断.md`); }
 function authPrompt() { state.authRequired = true; $('#auth-help').textContent = '服务器需要有效访问令牌才能读取或生成成绩报告，请填写后重新连接。'; $('#token-input').value = token; if (!$('#token-dialog').open) $('#token-dialog').showModal(); }
 function renderReview(report) { const review = report.review || { status: 'pending' }; const reviewed = review.status === 'reviewed'; $('#review-status').textContent = reviewed ? '已人工复核' : '待人工复核'; $('#review-status').className = 'tag' + (reviewed ? '' : ' medium'); $('#review-caption').textContent = reviewed ? `${review.reviewer} · ${when(review.reviewed_at)}${review.note ? ' · ' + review.note : ''}` : '诊断与分层仅为教学建议，需教师核对证据；不自动用于处罚或正式评价。'; $('#open-review').textContent = reviewed ? '查看复核记录' : '人工复核'; }
-function openReview() { if (!state.report) return; const review = state.report.review || {}; const form = $('#review-form'); form.elements.reviewer.value = review.reviewer || ''; form.elements.note.value = review.note || ''; $('#reset-review').hidden = review.status !== 'reviewed'; $('#review-error').hidden = true; $('#audit-log').innerHTML = (state.report.audit_log || []).map(item => `<li>${esc(when(item.created_at))} · ${esc({ created: '生成报告', reviewed: '标记已复核', review_reset: '撤回至待复核' }[item.action] || item.action)}${item.reviewer ? ' · ' + esc(item.reviewer) : ''}${item.note ? ' · ' + esc(item.note) : ''}</li>`).join('') || '<li>暂无操作记录。</li>'; $('#review-dialog').showModal(); }
-async function saveReview(reviewed) { const form = $('#review-form'); if (!form.reportValidity()) return; $('#save-review').disabled = true; $('#reset-review').disabled = true; $('#review-error').hidden = true; try { const report = await api('/reports/' + encodeURIComponent(state.report.id) + '/review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reviewer: form.elements.reviewer.value.trim(), note: form.elements.note.value.trim(), reviewed }) }); renderReport(report); $('#review-dialog').close(); await refreshHistory(); toast(reviewed ? '已保存人工复核记录。' : '报告已撤回至待复核。'); } catch (error) { $('#review-error').textContent = error.message; $('#review-error').hidden = false; } finally { $('#save-review').disabled = false; $('#reset-review').disabled = false; } }
+function openReview() { if (!state.report) return; const review = state.report.review || {}; const form = $('#review-form'); form.elements.reviewer.value = review.reviewer || ''; form.elements.note.value = review.note || ''; $('#reset-review').hidden = review.status !== 'reviewed'; $('#review-error').hidden = true; $('#audit-log').innerHTML = (state.report.audit_log || []).map(item => `<li>${esc(when(item.created_at))} · ${esc({ created: '生成报告', reviewed: '标记已复核', review_reset: '撤回至待复核', agent_run: '运行 Agent' }[item.action] || item.action)}${item.reviewer ? ' · ' + esc(item.reviewer) : ''}${item.note ? ' · ' + esc(item.note) : ''}</li>`).join('') || '<li>暂无操作记录。</li>'; $('#review-dialog').showModal(); }
+async function saveReview(reviewed) { const form = $('#review-form'); if (!form.reportValidity()) return; $('#save-review').disabled = true; $('#reset-review').disabled = true; $('#review-error').hidden = true; try { const report = await api('/reports/' + encodeURIComponent(state.report.id) + '/review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reviewer: form.elements.reviewer.value.trim(), note: form.elements.note.value.trim(), reviewed, agent_run_id: state.report.agent?.id || null }) }); renderReport(report); $('#review-dialog').close(); await refreshHistory(); toast(reviewed ? '已保存人工复核记录。' : '报告已撤回至待复核。'); } catch (error) { $('#review-error').textContent = error.message; $('#review-error').hidden = false; } finally { $('#save-review').disabled = false; $('#reset-review').disabled = false; } }
 async function boot() {
   $('#startup-error').hidden = true;
   try { const auth = await fetch('/api/auth/check'); if (auth.ok) state.authRequired = (await auth.json()).required; } catch { /* 后续业务请求会显示连接错误。 */ }
@@ -180,6 +185,7 @@ document.addEventListener('click', event => {
   if (button.id === 'retry-boot') boot();
 });
 $('#upload-form').addEventListener('submit', upload);
+$('#agent-form').addEventListener('submit', runDiagnosticAgent);
 $('#student-search').addEventListener('input', renderStudents);
 $('#student-level').addEventListener('change', renderStudents);
 $('#history-search').addEventListener('input', renderHistory);

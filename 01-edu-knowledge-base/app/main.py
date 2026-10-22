@@ -38,8 +38,14 @@ def create_app(data_dir: Path | str | None = None, *, settings: RAGSettings | No
                                 model=settings.llm_model, timeout=settings.timeout)
             else:
                 llm = LLMClient(base_url="", model="", api_key="")
+            agent_client = None
+            if settings.agent_enabled and settings.llm_provider == "openai":
+                from .agent_runtime import ToolChatClient
+                agent_client = ToolChatClient(base_url=settings.llm_base_url, api_key=settings.llm_api_key,
+                                             model=settings.llm_model, timeout=settings.timeout)
             service = KnowledgeService(data_dir, llm=llm, vector_index=vector,
-                                       policy=AnswerPolicy(semantic_min_score=settings.semantic_min_score))
+                                       policy=AnswerPolicy(semantic_min_score=settings.semantic_min_score),
+                                       agent_client=agent_client, agent_max_steps=settings.agent_max_steps)
         except Exception:
             if vector:
                 vector.close()
@@ -50,7 +56,7 @@ def create_app(data_dir: Path | str | None = None, *, settings: RAGSettings | No
         yield
         service.close()
 
-    app = FastAPI(title="EduForge 教育知识库", version="2.0.0", lifespan=lifespan,
+    app = FastAPI(title="EduForge 教育知识库 Agent", version="3.0.0", lifespan=lifespan,
                   docs_url="/api/docs", openapi_url="/api/openapi.json")
     app.state.service = service
     app.include_router(create_router(service=service))

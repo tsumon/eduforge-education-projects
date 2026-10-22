@@ -32,8 +32,9 @@ def provider():
                 if state["bad_embeddings"] is not None:
                     result = state["bad_embeddings"]
             elif self.path == "/v1/chat/completions":
+                message = state["chat_handler"](body) if state.get("chat_handler") else {"role": "assistant", "content": "平时成绩占30%，上机实验占20%，期末考试占50% [1]。"}
                 result = {"id": "test-chat", "object": "chat.completion", "model": body["model"],
-                          "choices": [{"index": 0, "finish_reason": "stop", "message": {"role": "assistant", "content": "平时成绩占30%，上机实验占20%，期末考试占50% [1]。"}}],
+                          "choices": [{"index": 0, "finish_reason": "stop", "message": message}],
                           "usage": {"prompt_tokens": 12, "completion_tokens": 10, "total_tokens": 22}}
             else:
                 self.send_error(404)
@@ -88,7 +89,7 @@ def test_rag_uses_both_http_apis_and_persistent_vector_database(provider, tmp_pa
     """运行完整 HTTP→Embedding API→Qdrant→回答 API 链路，而非直接替换 service.answer。"""
     base, calls, _ = provider
     settings = RAGSettings(embedding_base_url=base, embedding_api_key="embedding-test-only", embedding_model="test-embedding",
-                           embedding_dimension=3, llm_base_url=base, llm_api_key="chat-test-only", llm_model="test-chat")
+                           embedding_dimension=3, llm_base_url=base, llm_api_key="chat-test-only", llm_model="test-chat", agent_enabled=False)
     with TestClient(create_app(tmp_path, settings=settings)) as client:
         response = client.post("/api/knowledge/documents", json={"title": "Python考核", "content": "课程总评由三部分组成：平时成绩占30%；上机实验占20%；期末考试占50%。"})
         assert response.status_code == 201

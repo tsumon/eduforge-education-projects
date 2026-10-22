@@ -31,12 +31,31 @@
 
 保留字段 `id`、`question`、`answer`、`mode`、`refused`、`citations`、`diagnostics`、`created_at`、`feedback`。
 
-- `mode=llm`：实际采用了模型输出；`extractive`：原文抽取或检索阶段拒答。
+- `mode=agent`：默认 LangGraph 工具调用模式，状态与调用记录见 `diagnostics.agent`；`llm`、`extractive` 仅用于显式关闭 Agent 的基础模式。
 - `refused=true`：引用列表为空，答案以“现有资料不足以回答该问题。”开头。
 - `citations`：来源编号 `n`、document/chunk ID、title、heading、完整原文 `text`、原文摘录 `excerpt`、`score`、`coverage`、`segment_coverage`、`lexical_score`、`semantic_score`。
 - 完整 RAG 的 `score` 是排名融合分，`semantic_score` 是余弦相似度；词法模式的 `score` 为 BM25 分。两者不能直接比较，不是正确概率。
 - `diagnostics.retrieval.mode` 和 `diagnostics.model` 记录该次检索及回答模型；`candidates` 和 `selected` 可追溯实际证据。
-- `diagnostics.degraded=true` 表示模型校验/调用失败；`diagnostics.llm` 提供脱敏原因，如 `invalid_citations`、`unsupported_numbers`、`uncited_paragraph`、`error:`。
+- 基础模式中 `diagnostics.degraded=true` 表示生成校验/调用失败；`diagnostics.llm` 提供脱敏原因。Agent 模式不使用规则答案掩盖失败，核验失败在预算内交给模型修正，最终失败明确拒答。
+
+## Agent 运行结构
+
+`GET /stats` 新增 `agent:{enabled,configured,framework:"langgraph",max_steps}`。`configured` 只表示配置存在，不表示提供商可用。接口路径、请求与历史导出保持兼容。
+
+`POST /ask` 的 `diagnostics.agent` 包含：
+
+```json
+{
+  "framework": "langgraph", "status": "completed", "model": {"configured":true,"provider":"openai-compatible","model":"用户配置的模型"},
+  "steps": 4, "tool_calls": 3,
+  "events": [{"kind":"tool","step":1,"tool":"search_knowledge","call_id":"提供商调用编号","arguments":{"query":"查询","limit":4},"status":"ok","observation":{"ok":true,"data":{}}}],
+  "result": {"answer":"带[1]引用的答案","refused":false,"citations":[]}, "error": null
+}
+```
+
+示例只说明字段。状态为 `completed / failed / limited / not_configured`。`completed` 也可为经过搜索后的拒答，须同时检查 `refused`；失败与超限 `result=null`、外层 `refused=true`，历史照常保存。核验事件为 `kind=validation`，失败反馈会送回模型修正。
+
+模型只能调用 `search_knowledge(query,limit?)`、`read_evidence(source_ids)`、`check_answer(answer)`。参数强类型并拒绝未知字段，读取仅允许本次搜索编号；最终核验引用、数字和原文当前有效性。默认最多 8 次模型决策、12 次工具调用。错误正文、密钥、提供商地址不返回。
 - `evidence_basis=lexical_and_semantic` 表示证据同时通过词法和语义确认；`semantic` 表示只走语义路径。后者在生成失败时拒答，避免把相关片段硬凑成答案。
 
 常见 `diagnostics.reason`：`answered`、`no_question_terms`、`empty_index`、`no_candidates`、`semantic_score_below_threshold`、`unknown_identifiers`、`generation_not_grounded`；词法模式另有 `segment_coverage_below_threshold`、`coverage_below_threshold`、`score_below_threshold`。

@@ -8,6 +8,8 @@
   <title>EduForge 学情诊断</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/agent.css">
+  <script src="/agent.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -20,7 +22,7 @@
     <a href="#import" data-nav="import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg><span>导入数据</span></a>
     <a href="#history" data-nav="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM8 8h8M8 12h8M8 16h5"/></svg><span>历史报告</span></a>
   </nav>
-  <div class="rail-foot"><span class="dot"></span> 规则统计 · 本地存储<p>从实际作答证据出发</p></div>
+  <div class="rail-foot"><span class="dot"></span> 学情 Agent · 本地记录<p>从实际作答证据出发</p></div>
 </aside>
 <div class="app-shell">
   <header class="topbar"><span id="scope">学情诊断工作台</span><div class="connection"><span class="dot" id="connection-dot"></span><span id="connection-text">连接中</span><button class="topbar-button" id="token-settings">访问令牌</button></div></header>
@@ -33,12 +35,19 @@
         <h2>从一份考核记录开始</h2><p>上传作业、随堂测和课堂互动 CSV，结合评分标准与已授课进度，生成可追溯的诊断报告。</p>
         <div class="actions"><a class="btn primary" href="#import">导入班级 CSV</a><button class="btn" data-demo>体验合成示例</button><a class="text-link" href="/api/diagnostics/sample">下载示例 CSV</a></div>
         <div class="first-run-steps"><div><span>数据</span><strong>逐条考核记录</strong><p>按学号、知识点与考核类型核对。</p></div><div><span>判断</span><strong>明确边界的统计</strong><p>缺数据与未授课不按零分处理。</p></div><div><span>行动</span><strong>补讲与分层练习</strong><p>每道练习均附提示和参考答案。</p></div></div>
-        <p class="quiet">示例为合成教学数据；系统使用规则计算，不调用大模型。</p>
+        <p class="quiet">示例为合成教学数据。配置回答 API 后，Agent 会查询统计与证据并生成教学方案；未配置时显示基础统计预览。</p>
       </div>
       <div id="report-content" hidden>
         <div class="report-meta"><span id="report-source"></span><span id="report-created"></span><span class="tag" id="demo-tag" hidden>合成示例</span></div>
         <div class="review-bar"><div><span class="tag" id="review-status">待人工复核</span><p id="review-caption">诊断与分层仅为教学建议，请教师核对原始证据。</p></div><button class="btn" id="open-review">人工复核</button></div>
         <div class="kpi-strip" id="kpis"></div>
+        <section class="panel agent-panel" aria-labelledby="agent-title">
+          <div class="panel-head"><div><h2 id="agent-title">Agent 诊断方案</h2><p>从当前报告的证据出发，形成补讲与分层练习建议。</p></div><span class="tag" id="agent-status">尚未运行</span></div>
+          <form id="agent-form" class="agent-form"><label class="field">本次诊断目标<input id="agent-goal" maxlength="500" required value="找出需要核对的薄弱点，提出具体补讲步骤并生成分层练习。"></label><button class="btn" id="run-agent" type="submit">运行 Agent</button></form>
+          <p class="agent-message quiet" id="agent-message" role="status" aria-live="polite"></p>
+          <div id="agent-result" class="agent-result"></div>
+          <details class="agent-trace"><summary id="agent-trace-label">工具调用记录</summary><div id="agent-trace"></div></details>
+        </section>
         <p class="finding" id="report-finding"></p>
         <div class="analysis-grid">
           <section class="panel topic-panel"><div class="panel-head"><div><h2>知识点掌握情况</h2><p>只对达到数据要求且已授课的知识点评分</p></div><span class="quiet" id="topic-count"></span></div><div class="table-scroll"><table class="data-table topic-table"><thead><tr><th>知识点 / 教学进度</th><th class="num">掌握度</th><th class="num">薄弱 / 可评估</th><th>补讲优先级</th></tr></thead><tbody id="topic-rows"></tbody></table></div><p class="panel-note">掌握度为 0—100 分；“—”表示未评估，不代表零分。</p></section>
@@ -58,6 +67,7 @@
       <div class="import-grid"><section class="panel form-panel"><h2>生成诊断报告</h2><form id="upload-form">
         <label class="field">考核记录 CSV <span class="required">必选</span><input type="file" name="file" accept=".csv,text/csv" required><span class="quiet">支持中英文表头，单文件不超过 8 MB。</span></label>
         <label class="field">班级名称 <span class="optional">选填</span><input name="class_name" maxlength="100" placeholder="留空使用课程进度表中的班级名称"></label>
+        <label class="field">诊断目标 <span class="optional">选填</span><input name="goal" maxlength="500" placeholder="例如：重点查看循环失分证据，为基础层生成变式练习"></label>
         <fieldset><legend>本次评分配置 <span class="optional">选填</span></legend><p class="quiet">不上传时使用下方默认配置。配置仅作用于本次报告。</p><label class="field">课程进度 syllabus.json<input type="file" name="syllabus" accept=".json,application/json"><span class="quiet">含课程、班级、已授课周次与知识点周次。</span></label><label class="field">评分标准 rubric.json<input type="file" name="rubric" accept=".json,application/json"><span class="quiet">含三类考核权重、分层阈值和最低记录数。</span></label></fieldset>
         <div id="upload-error" class="notice error" role="alert" tabindex="-1" hidden></div><div class="submit-row"><button class="btn primary" type="submit" id="upload-submit">上传并生成报告</button><span class="quiet" id="upload-state" aria-live="polite"></span></div>
       </form></section><aside class="import-side"><section class="panel"><div class="panel-head"><div><h2>当前默认配置</h2><p>可下载后修改，再随 CSV 一起上传</p></div></div><div id="default-config" class="config-summary"><p class="quiet">正在读取配置…</p></div><div class="download-row"><a class="text-link" href="/api/diagnostics/sample?kind=syllabus">课程进度 JSON ↓</a><a class="text-link" href="/api/diagnostics/sample?kind=rubric">评分标准 JSON ↓</a></div></section><section class="panel sample-panel"><h2>先体验完整流程</h2><p>合成示例包含多类考核、不同掌握程度和未授课知识点，不含真实学生信息。</p><button class="btn" data-demo>生成合成示例报告</button><p class="quiet">报告会明确标注合成数据。</p></section></aside></div>

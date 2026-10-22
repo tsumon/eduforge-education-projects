@@ -1,0 +1,1 @@
+.agent-trace{padding:16px 0;font-size:13px;border-top:1px solid var(--border);overflow-wrap:anywhere}.agent-trace>p,.agent-trace>details{margin-top:12px}.agent-trace summary{cursor:pointer}.agent-trace pre{max-height:280px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--surface);padding:12px;font:12px/1.6 monospace}

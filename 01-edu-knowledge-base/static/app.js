@@ -101,7 +101,7 @@
       const retrieval = stats.retrieval || { mode: "lexical", ready: true };
       setStatus(retrieval.ready ? "ok" : "err", retrieval.ready ? `${stats.document_count} 份资料 · ${stats.chunk_count} 个分片` : "索引异常，请到设置重建");
       const llm = stats.llm && stats.llm.configured;
-      $("#status-mode").textContent = `${retrieval.mode === "hybrid" ? "混合检索" : "词法检索"} · ${llm ? "API 生成" : "原文抽取"}`;
+      $("#status-mode").textContent = `${retrieval.mode === "hybrid" ? "混合检索" : "词法检索"} · ${stats.agent?.enabled ? "知识库 Agent" : llm ? "API 生成" : "基础检索预览"}`;
       $("#status-mode").title = llm ? stats.llm.model : "未启用回答模型";
       if ($("#answer-empty-docs")) $("#answer-empty-docs").hidden = stats.document_count > 0;
       $("#library-doc-count").textContent = stats.document_count.toLocaleString("zh-CN");
@@ -204,8 +204,11 @@
     const art = $(".answer", tpl);
     const cites = rec.citations || [];
     $(".answer-q", tpl).textContent = rec.question;
-    $(".pill-mode", tpl).textContent = rec.refused ? "资料不足" : rec.mode === "llm" ? "模型生成 · 基于引用" : rec.diagnostics?.degraded ? "生成未通过 · 原文抽取" : "原文抽取";
+    const run = rec.diagnostics?.agent;
+    const runFailed = run && run.status !== "completed";
+    $(".pill-mode", tpl).textContent = run ? (runFailed ? "Agent 未完成" : rec.refused ? "Agent · 资料不足" : "Agent · 已核验引用") : rec.refused ? "资料不足" : rec.mode === "llm" ? "模型生成 · 基于引用" : rec.diagnostics?.degraded ? "生成未通过 · 原文抽取" : "原文抽取";
     $(".result-title", tpl).textContent = rec.refused ? "当前资料无法支持回答" : "根据课程资料";
+    if (runFailed) $(".result-title", tpl).textContent = "Agent 未完成本次任务";
     if (rec.refused) $(".pill-mode", tpl).style.color = "var(--red)";
     const time = $(".answer-time", tpl);
     time.textContent = fmtTime(rec.created_at);
@@ -215,10 +218,11 @@
     if (rec.refused) {
       art.classList.add("refused");
       $(".stamp", tpl).hidden = false;
+      if (runFailed) $(".stamp", tpl).textContent = "查看下方工具记录后重试";
       const p = $(".refusal", tpl);
       p.hidden = false;
       p.textContent = rec.answer;
-    } else if (rec.mode === "llm" || !cites.every(c => c.excerpt)) {
+    } else if (rec.mode === "agent" || rec.mode === "llm" || !cites.every(c => c.excerpt)) {
       const p = $(".answer-text", tpl);
       p.hidden = false;
       renderCiteLinks(p, rec.answer, cites);
@@ -250,6 +254,18 @@
         paint(upd.feedback);
       } catch (e) { toast(e.message, true); }
     }));
+    if (run) {
+      const names = { search_knowledge: "检索资料", read_evidence: "读取原文", check_answer: "检查草稿" };
+      const statuses = { completed: "已完成", limited: "达到运行上限", failed: "运行失败", not_configured: "尚未配置 API" };
+      $(".diag", tpl).before(el("details", { class: "agent-trace" }, [
+        el("summary", { text: `Agent ${statuses[run.status] || run.status} · ${run.steps} 次模型决策 · ${run.tool_calls} 次工具调用` }),
+        el("p", { class: "muted", text: "这里展示实际工具调用和核验结果，可展开查看依据。" }),
+        ...run.events.map(event => el("details", {}, [
+          el("summary", { text: event.kind === "tool" ? `${names[event.tool] || event.tool} · ${event.status === "ok" ? "成功" : "未成功"}` : `最终核验 · ${event.status === "ok" ? "通过" : "需修正"}` }),
+          el("pre", { text: JSON.stringify(event.kind === "tool" ? { arguments: event.arguments, observation: event.observation } : { reason: event.reason || "passed" }, null, 2) })
+        ])), ...(run.error ? [el("p", { class: "muted", text: "停止原因：" + run.error })] : [])
+      ]));
+    }
     $(".diag pre", tpl).textContent = JSON.stringify(rec.diagnostics || {}, null, 2);
     $("#answer-area").replaceChildren(tpl);
   }
@@ -264,7 +280,7 @@
     $("#btn-new-question").disabled = true;
     $("span", btn).textContent = "检索中…";
     $$(".chip").forEach(b => { b.disabled = true; });
-    $("#answer-area").replaceChildren(el("p", { class: "loading", text: "正在检索资料…" }));
+      $("#answer-area").replaceChildren(el("p", { class: "loading", text: stats?.agent?.enabled ? "Agent 正在检索并核对原文…" : "正在检索资料…" }));
     try {
       const rec = await postJSON("/ask", { question: q });
       renderAnswer(rec);
@@ -494,8 +510,8 @@
     }));
     const llm = stats.llm || {};
     $("#llm-info").replaceChildren(llm.configured
-      ? el("p", {}, [el("span", { class: "tag green", text: "兼容 API" }), ` ${llm.model}；回答模式 llm`])
-      : el("p", {}, [el("span", { class: "tag", text: "未配置" }), " 当前为原文抽取模式，不调用任何外部服务"]));
+        ? el("p", {}, [el("span", { class: "tag green", text: "兼容 API" }), ` ${llm.model}；${stats.agent?.enabled ? `LangGraph Agent，最多 ${stats.agent.max_steps} 次决策，需支持 tools/tool_calls` : "基础生成模式 llm"}`])
+        : el("p", {}, [el("span", { class: "tag", text: "未配置" }), " 未启用回答模型，当前为基础检索预览"]));
     const retrieval = stats.retrieval || {};
     const vector = retrieval.vector_store;
     $("#retrieval-info").replaceChildren(vector
